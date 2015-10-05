@@ -1,3 +1,5 @@
+import java.util.Random;
+
 /**
  * Created with IntelliJ IDEA.
  * User: s.dossantos
@@ -17,6 +19,18 @@ public class Model {
         _sp.initialize();
     }
 
+    public int simulation(){
+        Random rd = new Random();
+        int n=rd.nextInt(100)+1;
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        //wait(1000);
+        System.out.println(n);
+        return n;
+    }
 
     public SerialPort getSerialPort(){
         return _sp;

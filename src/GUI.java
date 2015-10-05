@@ -159,4 +159,7 @@ public class GUI extends JFrame
     public void setValue_motor(int val){
         this.slider_motor.setValue(val);
     }
+    public void setValue_textPanel(String val, String pre){
+        this.textPane.setText(pre + val);
+    }
 }

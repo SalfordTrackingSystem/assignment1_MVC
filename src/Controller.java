@@ -17,6 +17,11 @@ public class Controller {
     }
     public void start(){
         _view.visible(true);
+        while(1==1){
+            int result = _model.simulation();
+            _view.setValue_L_IR(result);
+            _view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
+        }
     }
 
 
