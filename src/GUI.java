@@ -33,15 +33,9 @@ public class GUI extends JFrame
     private JTextPane textPane;
     private JScrollPane scrollPane;
     private JPanel tablePanel[][];
-
-
     private JFrame frame;
     private byte data[];
-
     private Controller _ctrl;
-
-
-
 
     public GUI(Controller controller)
     {
@@ -53,60 +47,13 @@ public class GUI extends JFrame
                 e.getAdjustable().setValue(e.getAdjustable().getMaximum());
             }
         });
-         /*
-        slider_L_IR.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                //To change body of implemented methods use File | Settings | File Templates.
-                //System.out.print("L_IR");
-                System.out.print(slider_L_IR.getValue());
-                System.out.print("\n");
-                textPane.setText("L_IR : " + Integer.toString(slider_L_IR.getValue()));
-            }
-        });
-        slider_R_IR.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                //To change body of implemented methods use File | Settings | File Templates.
-                //System.out.print("R_IR");
-                System.out.print(slider_R_IR.getValue());
-                System.out.print("\n");
-                textPane.setText("R_IR : " + Integer.toString(slider_R_IR.getValue()));
-            }
-        });
-        slider_fusion.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                //To change body of implemented methods use File | Settings | File Templates.
-                //System.out.print("fusion");
-                System.out.print(slider_fusion.getValue());
-                System.out.print("\n");
-            }
-        });
-        slider_motor.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                //To change body of implemented methods use File | Settings | File Templates.
-                //System.out.print("motor");
-                System.out.print(slider_motor.getValue());
-                System.out.print("\n");
-            }
-        });
-        */
+
     }
 
-   /**
-    * Method     : GUI::start()
-    * Purpose    : Configure and show the graphical interface.
-    * Parameters : None.
-    * Returns    : Nothing.
-    * Notes      : None.
-    **/
     public void start()
     {
         // [+]Initialisation of the camera's picture:
         tablePanel = new JPanel[IMAGE_LINE][IMAGE_COLUMN];
-        //imagePanel = new JPanel();
         imagePanel.setLayout(new GridLayout(IMAGE_LINE, IMAGE_COLUMN));
         for(int i=0 ; i<IMAGE_LINE   ; i++)
         for(int j=0 ; j<IMAGE_COLUMN ; j++)
@@ -121,7 +68,6 @@ public class GUI extends JFrame
         frame.setContentPane(this.panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        //frame.setVisible(true);
 
         // Events
         slider_L_IR.addChangeListener(new Events(this._ctrl));

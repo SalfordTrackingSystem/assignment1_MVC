@@ -18,9 +18,11 @@ public class Controller {
     public void start(){
         _view.visible(true);
         while(true){
-            int result = _model.simulation();
-            _view.setValue_L_IR(result);
-            _view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
+            //int result = _model.simulation();
+            //_view.setValue_L_IR(result);
+            //_view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
+            byte[] result = _model.simulation_frame();
+
         }
     }
 

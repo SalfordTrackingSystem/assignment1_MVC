@@ -31,6 +31,24 @@ public class Model {
         return n;
     }
 
+    public byte[] simulation_frame(){
+        //Random rd = new Random();
+        byte i = 1;
+
+        byte[] frame = {36, 1, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, 16, 0, 37};
+
+        //n=rd.nextInt(100)+1;
+
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        //System.out.println(frame[0]);
+        return frame;
+    }
+
     public SerialPort getSerialPort(){
         return _sp;
     }

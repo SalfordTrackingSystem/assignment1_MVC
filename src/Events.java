@@ -39,6 +39,12 @@ public class Events implements ChangeListener, SerialPortEventListener {
             System.out.println("Error Events class");
         }
     }
+    /*
+    //scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+    public void adjustmentValueChanged(AdjustmentEvent e) {
+        e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+    }
+      */
 
     public synchronized void serialEvent(SerialPortEvent oEvent)
     {
