@@ -27,7 +27,6 @@ public class Model {
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        //wait(1000);
         System.out.println(n);
         return n;
     }

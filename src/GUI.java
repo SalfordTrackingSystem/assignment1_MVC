@@ -1,7 +1,13 @@
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 //import java.awt.event.*;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+
 /**
  * Created by Theo Theodoridis.
  * Class    : GUI
@@ -25,6 +31,7 @@ public class GUI extends JFrame
     private JSlider slider_fusion;
     private JSlider slider_motor;
     private JTextPane textPane;
+    private JScrollPane scrollPane;
     private JPanel tablePanel[][];
 
 
@@ -41,7 +48,11 @@ public class GUI extends JFrame
         this._ctrl = controller;
         start();
 
-
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+            }
+        });
          /*
         slider_L_IR.addChangeListener(new ChangeListener() {
             @Override
@@ -160,6 +171,15 @@ public class GUI extends JFrame
         this.slider_motor.setValue(val);
     }
     public void setValue_textPanel(String val, String pre){
-        this.textPane.setText(pre + val);
+        //this.textPane.setText(pre + val);
+        //JTextPane textPane = new JTextPane();
+        //this.textPane.setText( "original text" );
+        StyledDocument doc = this.textPane.getStyledDocument();
+        //  Add some text
+        try
+        {
+            doc.insertString(doc.getLength(), pre + val +"\n", null);
+        }
+        catch(Exception e) { System.out.println(e); }
     }
 }
