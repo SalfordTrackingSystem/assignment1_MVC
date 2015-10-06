@@ -57,7 +57,7 @@ public class Events implements ChangeListener, SerialPortEventListener {
                 int available = _ctrl.getSerialPort().get_input().available();
                 data = new byte[available];
                 _ctrl.getSerialPort().get_input().read(data, 0, available);
-
+                System.out.println("brow");
                 // [+]Read incoming bytes:
                 //data[i] ...
                 for(int i=0; i<data.length; i++){

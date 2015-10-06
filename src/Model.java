@@ -1,3 +1,5 @@
+import sun.misc.ASCIICaseInsensitiveComparator;
+
 import java.util.Random;
 
 /**
@@ -34,12 +36,8 @@ public class Model {
     public byte[] simulation_frame(){
         //Random rd = new Random();
         byte i = 1;
-
-        byte[] frame = {36, 1, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, 16, 0, 37};
-
+        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, 16, 0, 37};
         //n=rd.nextInt(100)+1;
-
-
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -49,23 +47,26 @@ public class Model {
         return frame;
     }
 
-    public void checkData(Byte[] data){
+    public void checkData(byte[] data){
         String flag = "";
-        if (data[0].equals(frame.SENSOR_FUSION.SB)){
+        if (data[0] == frame.SENSOR_FUSION.SB){
+            int nbByte = data.length - 5;
             if (data[1] == frame.SENSOR_LIR.ID){
-                if (nbByte == frame.SENSOR_LIR.CS);
+                if (nbByte == frame.SENSOR_LIR.CS)
                     flag = frame.SENSOR_LIR.NAME;
             }
             else if (data[1] == frame.SENSOR_RIR.ID){
-                if (nbByte = frame.SENSOR_RIR.CS);
+                if (nbByte == frame.SENSOR_RIR.CS)
                     flag = frame.SENSOR_RIR.NAME;
             }
             else if (data[1] == frame.SENSOR_FUSION.ID){
-                if (nbByte = frame.SENSOR_FUSION.CS);
+                if (nbByte == frame.SENSOR_FUSION.CS)
                     flag = frame.SENSOR_FUSION.NAME;
             }
             else if (data[1] == frame.SENSOR_MOTOR.ID){
-                if (nbByte = frame.SENSOR_MOTOR.CS);
+                System.out.println(nbByte+"  "+frame.SENSOR_MOTOR.CS);
+
+                if (nbByte == frame.SENSOR_MOTOR.CS)
                     flag = frame.SENSOR_MOTOR.NAME;
             }
             else{
@@ -81,8 +82,8 @@ public class Model {
         // Same thing for all sensors
         ///////
         if (flag != ""){
-            if (data[data.length].toString() == frame.SENSOR_LIR.EB){
-                System.out.println(flag + " | CN : " + data[data.length-1]);
+            if (data[data.length-1] == frame.SENSOR_LIR.EB){
+                System.out.println(flag + " | CN : " + data[data.length-2]);
             }
         }
     }
