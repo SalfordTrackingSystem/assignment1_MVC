@@ -39,7 +39,7 @@ public class Model {
         //Random rd = new Random();
         byte i = 1;
         //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
-        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, 64, 0, 37};                                 // 8 bits
+        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, 85, 0, 37};                                 // 8 bits
         //n=rd.nextInt(100)+1;
         try {
             Thread.sleep(1000);
@@ -50,12 +50,11 @@ public class Model {
         return frame;
     }
 
-    public boolean checkCRC(byte[] data){
+    private boolean checkCRC(byte[] data, byte crcReceive){
         //CRC
         //P(x)=x^8+x^5+x^4+1 = 100110001
         int POLYNOMIAL = 31;
         byte nbrOfBytes = (byte) (data.length - 5);
-        byte crcReceive = data[data.length - 3];
         byte crc = 0;
         byte byteCtr;
         byte bit;
@@ -83,21 +82,46 @@ public class Model {
     public void checkData(byte[] data){
         String flag = "";
         if (data[0] == frame.SENSOR_FUSION.SB){ //|| data[0] == frame.SENSOR_LIR.SB || data[0] == frame.SENSOR_RIR.SB || data[0] == frame.SENSOR_MOTOR.SB){
-            if (this.checkCRC(data)){
+            byte[] data_only = new byte[16];
+            for(int i=2; i < data.length-3; i++){
+                data_only[i-2]=data[i];
+            }
+            if (this.checkCRC(data_only, data[data.length-3])){
                 if (data[1] == frame.SENSOR_LIR.ID)             flag = frame.SENSOR_LIR.NAME;
                 else if (data[1] == frame.SENSOR_RIR.ID)        flag = frame.SENSOR_RIR.NAME;
                 else if (data[1] == frame.SENSOR_FUSION.ID)     flag = frame.SENSOR_FUSION.NAME;
                 else if (data[1] == frame.SENSOR_MOTOR.ID)      flag = frame.SENSOR_MOTOR.NAME;
                 else                                            System.out.println("ID is not valid");
             }
-            else                                                System.out.println("CS is not valid");
+            else                                                System.out.println("CRC is not valid");
             if (flag != ""){
-                if (data[data.length-1] == frame.SENSOR_LIR.EB) System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
+                if (data[data.length-1] == frame.SENSOR_LIR.EB){
+                    System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
+                    //this.applyOnGUI(flag, data);
+                }
                 else                                            System.out.println("EB is not valid");
             }
         }
         else System.out.println("SB is not valid");
     }
+     /*
+    private void applyOnGUI(String flag, byte[] data) {
+        switch (flag){
+            case "LIR": _ctrl.getGUI().setValue_L_IR();
+                break;
+            case 2:  monthString = "February";
+                break;
+            case 3:  monthString = "March";
+                break;
+            case 4:  monthString = "April";
+                break;
+
+
+            default: monthString = "Invalid month";
+                break;
+        }
+    }
+       */
     public byte[] simulation_frame_color(){
         Random rd = new Random();
         byte i = (byte) (rd.nextInt(100)+1);
