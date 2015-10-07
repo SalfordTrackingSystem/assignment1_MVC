@@ -1,5 +1,7 @@
 import sun.misc.ASCIICaseInsensitiveComparator;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -64,8 +66,6 @@ public class Model {
                     flag = frame.SENSOR_FUSION.NAME;
             }
             else if (data[1] == frame.SENSOR_MOTOR.ID){
-                System.out.println(nbByte+"  "+frame.SENSOR_MOTOR.CS);
-
                 if (nbByte == frame.SENSOR_MOTOR.CS)
                     flag = frame.SENSOR_MOTOR.NAME;
             }
@@ -85,6 +85,28 @@ public class Model {
             if (data[data.length-1] == frame.SENSOR_LIR.EB){
                 System.out.println(flag + " | CN : " + data[data.length-2]);
             }
+        }
+    }
+
+    public void changedColor(JPanel[][] tablePanel, JPanel imagePanel){
+        Random rd = new Random();
+        int n = rd.nextInt(50)+1;
+
+        System.out.println(n);
+        for(int i=0 ; i<4   ; i++)
+            for(int j=0 ; j<4 ; j++)
+            {
+                //tablePanel[i][j] = new JPanel();
+                int val = (i + j) * n;
+                if (val > 255)
+                    val=255;
+                this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(val, 0, 0));
+                this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
+            }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 

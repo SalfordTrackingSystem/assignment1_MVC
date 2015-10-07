@@ -128,4 +128,10 @@ public class GUI extends JFrame
         }
         catch(Exception e) { System.out.println(e); }
     }
+    public JPanel get_imagePanel(){
+        return this.imagePanel;
+    }
+    public JPanel[][] get_tablePanel(){
+        return this.tablePanel;
+    }
 }

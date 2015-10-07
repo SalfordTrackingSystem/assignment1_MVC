@@ -23,7 +23,8 @@ public class Controller {
             //_view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
             //byte[] result = _model.simulation_frame();
             //_model.checkData(result);
-            System.out.println(_model.getSerialPort().getData());
+            //System.out.println(_model.getSerialPort().getData());
+            _model.changedColor(_view.get_tablePanel(), _view.get_imagePanel());
         }
     }
 
