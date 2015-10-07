@@ -38,7 +38,8 @@ public class Model {
     public byte[] simulation_frame(){
         //Random rd = new Random();
         byte i = 1;
-        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, 16, 0, 37};
+        //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
+        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, 64, 0, 37};                                 // 8 bits
         //n=rd.nextInt(100)+1;
         try {
             Thread.sleep(1000);
@@ -49,48 +50,58 @@ public class Model {
         return frame;
     }
 
-    public void checkData(byte[] data){
-        String flag = "";
-        if (data[0] == frame.SENSOR_FUSION.SB){
-            int nbByte = data.length - 5;
-            if (data[1] == frame.SENSOR_LIR.ID){
-                if (nbByte == frame.SENSOR_LIR.CS)
-                    flag = frame.SENSOR_LIR.NAME;
+    public boolean checkCRC(byte[] data){
+        //CRC
+        //P(x)=x^8+x^5+x^4+1 = 100110001
+        int POLYNOMIAL = 31;
+        byte nbrOfBytes = (byte) (data.length - 5);
+        byte crcReceive = data[data.length - 3];
+        byte crc = 0;
+        byte byteCtr;
+        byte bit;
+        //calculates 8-Bit checksum with given polynomial
+        for (byteCtr = 0; byteCtr < nbrOfBytes; ++byteCtr){
+            /* Initially, the dividend is the remainder */
+            crc ^= (data[byteCtr]);
+            /*  For each bit position in the message */
+            for (bit = 8; bit > 0; --bit){
+                if ((crc & 0x80) == 0b10000000)/* If the uppermost bit is a 1... */
+                    crc = (byte) ((crc << 1) ^ POLYNOMIAL);
+                else crc = (byte) (crc << 1);
             }
-            else if (data[1] == frame.SENSOR_RIR.ID){
-                if (nbByte == frame.SENSOR_RIR.CS)
-                    flag = frame.SENSOR_RIR.NAME;
-            }
-            else if (data[1] == frame.SENSOR_FUSION.ID){
-                if (nbByte == frame.SENSOR_FUSION.CS)
-                    flag = frame.SENSOR_FUSION.NAME;
-            }
-            else if (data[1] == frame.SENSOR_MOTOR.ID){
-                if (nbByte == frame.SENSOR_MOTOR.CS)
-                    flag = frame.SENSOR_MOTOR.NAME;
-            }
-            else{
-                System.out.println("ID not valid");
-            }
+        }
+        if (crc != crcReceive){
+            System.out.println(crc);
+            return false;
         }
         else{
-            System.out.println("No data");
+            System.out.println(crc);
+            return true;
         }
-        ///////
-        // If the flag have been changed, check the EB
-        // Print the CN of the sensor frame and valid the frame
-        // Same thing for all sensors
-        ///////
-        if (flag != ""){
-            if (data[data.length-1] == frame.SENSOR_LIR.EB){
-                System.out.println(flag + " | CN : " + data[data.length-2]);
+    }
+
+    public void checkData(byte[] data){
+        String flag = "";
+        if (data[0] == frame.SENSOR_FUSION.SB){ //|| data[0] == frame.SENSOR_LIR.SB || data[0] == frame.SENSOR_RIR.SB || data[0] == frame.SENSOR_MOTOR.SB){
+            if (this.checkCRC(data)){
+                if (data[1] == frame.SENSOR_LIR.ID)             flag = frame.SENSOR_LIR.NAME;
+                else if (data[1] == frame.SENSOR_RIR.ID)        flag = frame.SENSOR_RIR.NAME;
+                else if (data[1] == frame.SENSOR_FUSION.ID)     flag = frame.SENSOR_FUSION.NAME;
+                else if (data[1] == frame.SENSOR_MOTOR.ID)      flag = frame.SENSOR_MOTOR.NAME;
+                else                                            System.out.println("ID is not valid");
+            }
+            else                                                System.out.println("CS is not valid");
+            if (flag != ""){
+                if (data[data.length-1] == frame.SENSOR_LIR.EB) System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
+                else                                            System.out.println("EB is not valid");
             }
         }
+        else System.out.println("SB is not valid");
     }
     public byte[] simulation_frame_color(){
         Random rd = new Random();
         byte i = (byte) (rd.nextInt(100)+1);
-        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, 16, 0, 37};
+        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, 124, 0, 37};
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

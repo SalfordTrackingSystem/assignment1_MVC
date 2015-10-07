@@ -22,8 +22,8 @@ public class Controller {
             //_view.setValue_L_IR(result);
             //_view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
             /////
-            //byte[] result = _model.simulation_frame();
-            //_model.checkData(result);
+            byte[] result = _model.simulation_frame();
+            _model.checkData(result);
             /////
             //System.out.println(_model.getSerialPort().getData());
             /////
