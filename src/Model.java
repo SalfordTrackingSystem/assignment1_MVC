@@ -87,27 +87,40 @@ public class Model {
             }
         }
     }
-
-    public void changedColor(JPanel[][] tablePanel, JPanel imagePanel){
+    public byte[] simulation_frame_color(){
         Random rd = new Random();
-        int n = rd.nextInt(50)+1;
-
-        System.out.println(n);
-        for(int i=0 ; i<4   ; i++)
-            for(int j=0 ; j<4 ; j++)
-            {
-                //tablePanel[i][j] = new JPanel();
-                int val = (i + j) * n;
-                if (val > 255)
-                    val=255;
-                this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(val, 0, 0));
-                this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
-            }
+        byte i = (byte) (rd.nextInt(100)+1);
+        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, 16, 0, 37};
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+        //System.out.println(frame[0]);
+        return frame;
+    }
+
+    public void changedColor(JPanel[][] tablePanel, JPanel imagePanel, byte[] frame){
+        //Random rd = new Random();
+        //int n = rd.nextInt(50)+1;
+
+        //System.out.println(n);
+        for(int i=0 ; i<4   ; i++)
+            for(int j=0 ; j<4 ; j++)
+            {
+                //tablePanel[i][j] = new JPanel();
+                int val = (i + j) * frame[i*4+j+2];
+                //int val = frame[i*4+j+2];
+                if (val > 255)
+                    val=255;
+                this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(val, 0, 0));
+                this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
+            }
+        /*try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } */
     }
 
     public SerialPort getSerialPort(){

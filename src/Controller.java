@@ -21,10 +21,16 @@ public class Controller {
             //int result = _model.simulation();
             //_view.setValue_L_IR(result);
             //_view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
+            /////
             //byte[] result = _model.simulation_frame();
             //_model.checkData(result);
+            /////
             //System.out.println(_model.getSerialPort().getData());
-            _model.changedColor(_view.get_tablePanel(), _view.get_imagePanel());
+            /////
+            //byte[] result = _model.simulation_frame_color();
+            //_model.changedColor(_view.get_tablePanel(), _view.get_imagePanel(), result);
+            /////
+
         }
     }
 
