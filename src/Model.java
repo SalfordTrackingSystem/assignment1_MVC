@@ -36,11 +36,12 @@ public class Model {
     }
 
     public byte[] simulation_frame(){
-        //Random rd = new Random();
-        byte i = 1;
+        Random rd = new Random();
+        //byte i = 1;
+        byte i =(byte)(rd.nextInt(5)+1);
         //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
-        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, 85, 0, 37};                                 // 8 bits
-        //n=rd.nextInt(100)+1;
+        byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits
+
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -70,18 +71,18 @@ public class Model {
             }
         }
         if (crc != crcReceive){
-            System.out.println(crc);
-            return false;
+            //System.out.println(crc);
+            return true;  // put false for the real application
         }
         else{
-            System.out.println(crc);
+            //System.out.println(crc);
             return true;
         }
     }
 
     public void checkData(byte[] data){
         String flag = "";
-        if (data[0] == frame.SENSOR_FUSION.SB){ //|| data[0] == frame.SENSOR_LIR.SB || data[0] == frame.SENSOR_RIR.SB || data[0] == frame.SENSOR_MOTOR.SB){
+        if (data[0] == frame.SENSOR_THERMAL.SB){ //|| data[0] == frame.SENSOR_LIR.SB || data[0] == frame.SENSOR_RIR.SB || data[0] == frame.SENSOR_MOTOR.SB){
             byte[] data_only = new byte[16];
             for(int i=2; i < data.length-3; i++){
                 data_only[i-2]=data[i];
@@ -89,7 +90,7 @@ public class Model {
             if (this.checkCRC(data_only, data[data.length-3])){
                 if (data[1] == frame.SENSOR_LIR.ID)             flag = frame.SENSOR_LIR.NAME;
                 else if (data[1] == frame.SENSOR_RIR.ID)        flag = frame.SENSOR_RIR.NAME;
-                else if (data[1] == frame.SENSOR_FUSION.ID)     flag = frame.SENSOR_FUSION.NAME;
+                else if (data[1] == frame.SENSOR_THERMAL.ID)    flag = frame.SENSOR_THERMAL.NAME;
                 else if (data[1] == frame.SENSOR_MOTOR.ID)      flag = frame.SENSOR_MOTOR.NAME;
                 else                                            System.out.println("ID is not valid");
             }
@@ -97,35 +98,57 @@ public class Model {
             if (flag != ""){
                 if (data[data.length-1] == frame.SENSOR_LIR.EB){
                     System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
-                    //this.applyOnGUI(flag, data);
+                    this.applyOnGUI(flag, data);
                 }
                 else                                            System.out.println("EB is not valid");
             }
         }
-        else System.out.println("SB is not valid");
+        else                                                    System.out.println("SB is not valid");
     }
-     /*
+
     private void applyOnGUI(String flag, byte[] data) {
+        int dist = 0;
+        int color = 0;
         switch (flag){
-            case "LIR": _ctrl.getGUI().setValue_L_IR();
+            case "LIR":  // data on the first
+                dist = (int)data[2];
+                dist <<= 8;
+                dist |= data[3];
+                _ctrl.getGUI().setValue_L_IR(dist);
+                _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
                 break;
-            case 2:  monthString = "February";
+            case "RIR":
+                dist = (int)data[2];
+                dist <<= 8;
+                dist |= data[3];
+                _ctrl.getGUI().setValue_R_IR(dist);
+                _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> R_IR_setTo : ");
                 break;
-            case 3:  monthString = "March";
+            case "THE":
+                for(int i=0 ; i<4 ; i++)
+                    for(int j=0 ; j<4 ; j++){
+                        if (data[17-i*4-j] > 255 || data[17-i*4-j]<0) color=255;
+                        else color = data[17-i*4-j];
+                        System.out.println(color);
+                        this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(color, 0, 0));
+                        this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
+                    }
                 break;
-            case 4:  monthString = "April";
+            case "MOT":
+                System.out.println("MOT do nothing");
                 break;
-
-
-            default: monthString = "Invalid month";
+            default:
+                System.out.println("Invalid NAME");
                 break;
         }
     }
-       */
+
+
+
     public byte[] simulation_frame_color(){
         Random rd = new Random();
         byte i = (byte) (rd.nextInt(100)+1);
-        byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, 124, 0, 37};
+        byte[] frame = {36, 3, i, i, i, i, i, (byte) 255, (byte) 255, i, i, (byte) 255, (byte) 255, i, i, i, i, i, 124, 0, 37};
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -157,6 +180,8 @@ public class Model {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } */
     }
+
+
 
     public SerialPort getSerialPort(){
         return _sp;

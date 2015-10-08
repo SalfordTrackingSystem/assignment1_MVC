@@ -43,14 +43,15 @@
                   <autoscrolls value="false"/>
                   <enabled value="false"/>
                   <inverted value="true"/>
-                  <majorTickSpacing value="75"/>
-                  <maximum value="150"/>
-                  <minorTickSpacing value="10"/>
+                  <majorTickSpacing value="650"/>
+                  <maximum value="1500"/>
+                  <minimum value="200"/>
+                  <minorTickSpacing value="500"/>
                   <paintLabels value="true"/>
                   <paintTicks value="true"/>
                   <paintTrack value="true"/>
                   <snapToTicks value="false"/>
-                  <value value="0"/>
+                  <value value="200"/>
                 </properties>
               </component>
               <component id="d2892" class="javax.swing.JLabel">
@@ -58,7 +59,7 @@
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="I-IR Sensor"/>
+                  <text value="R-IR Sensor"/>
                 </properties>
               </component>
               <component id="f6069" class="javax.swing.JSlider" binding="slider_R_IR">
@@ -68,12 +69,13 @@
                 <properties>
                   <enabled value="false"/>
                   <inverted value="true"/>
-                  <majorTickSpacing value="75"/>
-                  <maximum value="150"/>
-                  <minorTickSpacing value="10"/>
+                  <majorTickSpacing value="650"/>
+                  <maximum value="1500"/>
+                  <minimum value="200"/>
+                  <minorTickSpacing value="500"/>
                   <paintLabels value="true"/>
                   <paintTicks value="true"/>
-                  <value value="0"/>
+                  <value value="200"/>
                 </properties>
               </component>
               <component id="bb12d" class="javax.swing.JLabel">

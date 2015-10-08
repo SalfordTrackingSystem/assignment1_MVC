@@ -14,13 +14,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import gnu.io.SerialPortEventListener;
 
-public class Events implements ChangeListener, SerialPortEventListener {
+public class Events implements SerialPortEventListener {//ChangeListener,
     private Controller _ctrl;
     private byte data[] = null;
 
     public Events(Controller controller){
         this._ctrl = controller;
     }
+    /*
     public void stateChanged(ChangeEvent e){
         System.out.println("Clicked.");
         JSlider slider = (JSlider)e.getSource();
@@ -39,6 +40,7 @@ public class Events implements ChangeListener, SerialPortEventListener {
             System.out.println("Error Events class");
         }
     }
+    */
     /*
     //scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
     public void adjustmentValueChanged(AdjustmentEvent e) {

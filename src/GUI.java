@@ -70,10 +70,12 @@ public class GUI extends JFrame
         frame.pack();
 
         // Events
+        /* // Comment because GUI is only used to show and it's not interactive
         slider_L_IR.addChangeListener(new Events(this._ctrl));
         slider_R_IR.addChangeListener(new Events(this._ctrl));
         slider_fusion.addChangeListener(new Events(this._ctrl));
         slider_motor.addChangeListener(new Events(this._ctrl));
+        */
     }
 
     private void createUIComponents() {
@@ -86,8 +88,8 @@ public class GUI extends JFrame
         System.out.print(data+", ");
     }
 
-    public void visible(boolean yesorno){
-        frame.setVisible(yesorno);
+    public void visible(boolean yesOrNo){
+        frame.setVisible(yesOrNo);
     }
 
 
