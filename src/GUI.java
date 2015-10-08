@@ -9,12 +9,8 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
 /**
- * Created by Theo Theodoridis.
+ * Created by Sebastien Dos Santos
  * Class    : GUI
- * Version  : v1.0
- * Date     : 06/05/15
- * User     : ttheod
- * email    : ttheod@gmail.com
  * Comments : Class that creates a Graphical Users Interface.
  **/
 
@@ -41,13 +37,12 @@ public class GUI extends JFrame
     {
         this._ctrl = controller;
         start();
-
+        //scrollPane event
         scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
             public void adjustmentValueChanged(AdjustmentEvent e) {
                 e.getAdjustable().setValue(e.getAdjustable().getMaximum());
             }
         });
-
     }
 
     public void start()

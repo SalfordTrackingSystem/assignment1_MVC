@@ -18,6 +18,7 @@ public class Controller {
     public void start(){
         _view.visible(true);
         while(true){
+            /////// ALL TESTS
             //int result = _model.simulation();
             //_view.setValue_L_IR(result);
             //_view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
@@ -32,6 +33,9 @@ public class Controller {
             /////
             byte[] result = _model.simulation_frame_color();
             _model.checkData(result);
+            byte[] res = _model.simulation_frame();
+            _model.checkData(res);
+            /////
         }
     }
 

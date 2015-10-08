@@ -17,24 +17,39 @@ public class Model {
     private Controller _ctrl;
     private SerialPort _sp;
 
+    /**
+     * Method     : Constructor of Model class
+     * Parameters : Controller
+     * Returns    : Nothing
+     * Notes      : Initialize SerialPort class
+     **/
     public Model(Controller controller){
         this._ctrl = controller;
         _sp = new SerialPort(_ctrl);
         _sp.initialize();
     }
-
-    public int simulation(){
+    /**
+     * Method     : simulation()
+     * Parameters : Waiting time in milliseconds
+     * Returns    : Random number between 0 and 101
+     * Notes      : Use to simulate number each waiting time
+     **/
+    public int simulation(int time){
         Random rd = new Random();
         int n=rd.nextInt(100)+1;
         try {
-            Thread.sleep(1000);
+            Thread.sleep(time);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         System.out.println(n);
         return n;
     }
-
+    /**
+     * Method     : simulation_frame()
+     * Returns    : 8 or 16 bits frame with |SB|ID|CRC|CN|EB|
+     * Notes      : Used to simulate frame each second
+     **/
     public byte[] simulation_frame(){
         Random rd = new Random();
         //byte i = 1;
@@ -50,7 +65,12 @@ public class Model {
         //System.out.println(frame[0]);
         return frame;
     }
-
+    /**
+     * Method     : checkCRC()
+     * Parameters : byte[] data (frame),  byte crcReceive
+     * Returns    : Boolean => to validated the frame or not
+     * Notes      : Analyse the CRC and compare it to the CRC calculate by the µC
+     **/
     private boolean checkCRC(byte[] data, byte crcReceive){
         //CRC
         //P(x)=x^8+x^5+x^4+1 = 100110001
@@ -79,7 +99,12 @@ public class Model {
             return true;
         }
     }
-
+    /**
+     * Method     : checkData()
+     * Parameters : byte[] data (frame)
+     * Returns    : Nothing.
+     * Notes      : Perform analysis of the frame and validate it or not
+     **/
     public void checkData(byte[] data){
         String flag = "";
         if (data[0] == frame.SENSOR_THERMAL.SB){ //|| data[0] == frame.SENSOR_LIR.SB || data[0] == frame.SENSOR_RIR.SB || data[0] == frame.SENSOR_MOTOR.SB){
@@ -96,7 +121,8 @@ public class Model {
             }
             else                                                System.out.println("CRC is not valid");
             if (flag != ""){
-                if (data[data.length-1] == frame.SENSOR_LIR.EB){
+                if (data[data.length-1] == frame.SENSOR_LIR.EB){  // if it's true, frame is validated
+                    System.out.println("Frame validated => |SB|ID|CRC|CN|EB|");
                     System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
                     this.applyOnGUI(flag, data);
                 }
@@ -105,10 +131,16 @@ public class Model {
         }
         else                                                    System.out.println("SB is not valid");
     }
-
+    /**
+     * Method     : applyOnGUI()
+     * Parameters : String flag (name of the sensor), byte[] data (frame)
+     * Returns    : Nothing
+     * Notes      : Used to display information into the GUI
+     **/
     private void applyOnGUI(String flag, byte[] data) {
         int dist = 0;
         int color = 0;
+        int position = 0;
         switch (flag){
             case "LIR":  // data on the first
                 dist = (int)data[2];
@@ -127,15 +159,19 @@ public class Model {
             case "THE":
                 for(int i=0 ; i<4 ; i++)
                     for(int j=0 ; j<4 ; j++){
-                        if (data[17-i*4-j] > 255 || data[17-i*4-j]<0) color=255;
+                        if (data[17-i*4-j] > 255 || data[17-i*4-j]<0) color=128;
                         else color = data[17-i*4-j];
-                        System.out.println(color);
+                        //System.out.println(color);
                         this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(color, 0, 0));
                         this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
                     }
                 break;
             case "MOT":
-                System.out.println("MOT do nothing");
+                //System.out.println("MOT do nothing");
+                // !! Not really implemented at this time, need more information on the motor returned value
+                position = data[2];
+                _ctrl.getGUI().setValue_motor(position);
+                _ctrl.getGUI().setValue_textPanel(Integer.toString(position), "> MOTOR_setTo : ");
                 break;
             default:
                 System.out.println("Invalid NAME");
@@ -144,7 +180,11 @@ public class Model {
     }
 
 
-
+    /**
+     * Method     : simulation_frame_color()
+     * Returns    : 16 bits frame with |SB|ID|CRC|CN|EB|
+     * Notes      : Used to simulate thermal frame each second
+     **/
     public byte[] simulation_frame_color(){
         Random rd = new Random();
         byte i = (byte) (rd.nextInt(100)+1);
@@ -157,18 +197,17 @@ public class Model {
         //System.out.println(frame[0]);
         return frame;
     }
-
+    /**
+     * Method     : changedColor()
+     * Parameters : JPanel[][] tablePanel (image panel), JPanel imagePanel(image), byte[] frame(sensor frame)
+     * Returns    : Nothing
+     * Notes      : Only used in a first time to set color in the panel image easily (Has no more the vocation to be used)
+     **/
     public void changedColor(JPanel[][] tablePanel, JPanel imagePanel, byte[] frame){
-        //Random rd = new Random();
-        //int n = rd.nextInt(50)+1;
-
-        //System.out.println(n);
         for(int i=0 ; i<4   ; i++)
             for(int j=0 ; j<4 ; j++)
             {
-                //tablePanel[i][j] = new JPanel();
                 int val = (i + j) * frame[i*4+j+2];
-                //int val = frame[i*4+j+2];
                 if (val > 255)
                     val=255;
                 this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(val, 0, 0));
@@ -182,7 +221,11 @@ public class Model {
     }
 
 
-
+    /**
+     * Method     : getSerialPort()
+     * Returns    : data from the serial port
+     * Notes      : Not used at this time
+     **/
     public SerialPort getSerialPort(){
         return _sp;
     }
