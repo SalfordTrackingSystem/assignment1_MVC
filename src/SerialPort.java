@@ -23,7 +23,7 @@ import gnu.io.SerialPortEventListener;
 public class SerialPort implements SerialPortEventListener
 {
 	private byte data[] = null;
-    private byte rxData[] = new byte[16];
+    private byte rxData[] = new byte[21];
     //private byte dataSerial[] = new byte[21];
     private int cnt = 0;
     //private byte rxByteSerial = 0;
@@ -150,7 +150,7 @@ public class SerialPort implements SerialPortEventListener
                 for(byte i=0 ; i<data.length ; i++)
                 {
                     rxData[cnt] = data[i];
-                    if(++cnt == 16)
+                    if(++cnt == 21)
                         cnt = 0;
                 }
                 delayMs(1);

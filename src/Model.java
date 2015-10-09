@@ -2,6 +2,8 @@ import sun.misc.ASCIICaseInsensitiveComparator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 /**
@@ -27,7 +29,18 @@ public class Model {
         this._ctrl = controller;
         _sp = new SerialPort(_ctrl);
         _sp.initialize();
+        //byte data[] = _sp.;
         while(true){
+
+            for (int i =0;i<21;i++){
+            //String str = new String(_sp.rxData(), "UTF_8");
+
+            //_ctrl.getGUI().setValue_textPanel(str, "DATA : ");
+                System.out.print(_sp.rxData()[i]+" ");
+            }
+            System.out.println();
+            //System.out.println();
+
             _ctrl.getGUI().setImage(_sp.rxData());
         }
     }
