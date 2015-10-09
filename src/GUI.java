@@ -131,4 +131,15 @@ public class GUI extends JFrame
     public JPanel[][] get_tablePanel(){
         return this.tablePanel;
     }
+    public void setImage(byte data[])
+    {
+        int cnt = 0;
+        for(int i=0 ; i<IMAGE_LINE   ; i++)
+            for(int j=0 ; j<IMAGE_COLUMN ; j++)
+            {
+                int red = data[cnt++] * 9;
+                if((red >= 0) && (red <= 255))
+                    tablePanel[i][j].setBackground(new Color(red, 0, 0));
+            }
+    }
 }

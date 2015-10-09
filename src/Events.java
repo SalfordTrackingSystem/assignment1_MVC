@@ -16,7 +16,7 @@ import gnu.io.SerialPortEventListener;
 
 public class Events implements SerialPortEventListener {//ChangeListener,
     private Controller _ctrl;
-    private byte data[] = null;
+    //private byte data[] = null;
 
     public Events(Controller controller){
         this._ctrl = controller;
@@ -57,14 +57,22 @@ public class Events implements SerialPortEventListener {//ChangeListener,
                 //input = _ctrl.getSerialPort().get_input();
                 // [+]Acquire bytes from serial port.
                 int available = _ctrl.getSerialPort().get_input().available();
-                data = new byte[available];
-                _ctrl.getSerialPort().get_input().read(data, 0, available);
-                System.out.println("brow");
+                //_ctrl.getSerialPort().getData() = new byte[available];
+                //_ctrl.getSerialPort().get_input().read(data, 0, available);
+                //System.out.println("brow");
                 // [+]Read incoming bytes:
                 //data[i] ...
+
+                //System.out.println(data.length);
+                /*
                 for(int i=0; i<data.length; i++){
-                    System.out.print(data[i]+", ");
-                }
+                    if(data[i] == '$')
+
+                        System.out.println("OK");
+                    //System.out.print(data[i]+" , ");
+                }    */
+
+               // System.out.println();
             }
             catch(Exception e)
             {

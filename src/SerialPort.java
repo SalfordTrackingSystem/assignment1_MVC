@@ -1,7 +1,10 @@
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
+import com.sun.org.apache.xerces.internal.impl.io.ASCIIReader;
 import gnu.io.SerialPortEvent;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPortEventListener;
@@ -17,15 +20,21 @@ import gnu.io.SerialPortEventListener;
  * Comments : This class reads/writes data bytes from the serial port.
  **/
 
-public class SerialPort //implements SerialPortEventListener
+public class SerialPort implements SerialPortEventListener
 {
 	private byte data[] = null;
+    private byte rxData[] = new byte[16];
+    //private byte dataSerial[] = new byte[21];
+    private int cnt = 0;
+    //private byte rxByteSerial = 0;
 	private gnu.io.SerialPort serialPort;
+    //FileOutputStream fos = null;
+
 	private static final String PORT_NAMES[] =
     {
         //"/dev/tty.usbserial-A9007UX1", // Mac OS X
         //"/dev/ttyUSB0",                // Linux
-        "COM12"                         // Windows
+        "COM13"                         // Windows
     };
 
 	private InputStream input;                 // Buffered input stream from the port.
@@ -80,6 +89,7 @@ public class SerialPort //implements SerialPortEventListener
 		}
 		try
         {
+            //fos = new FileOutputStream(new File("test.txt"));
 			// [+]Open serial port, and use class name for the appName.
 			serialPort = (gnu.io.SerialPort)portId.open(this.getClass().getName(), TIME_OUT);
 
@@ -91,8 +101,9 @@ public class SerialPort //implements SerialPortEventListener
 			output = serialPort.getOutputStream();
 
 			// [+]Add event listeners.
-			serialPort.addEventListener(new Events(this._ctrl));
+            serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
+            //}
 		}
         catch (Exception e)
         {
@@ -123,31 +134,34 @@ public class SerialPort //implements SerialPortEventListener
     * Returns    : Nothing.
     * Notes      : None.
     **/
-   /*
+
 	public synchronized void serialEvent(SerialPortEvent oEvent)
     {
 		if(oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE)
         {
 			try
             {
-				// [+]Acquire bytes from serial port.
+                // [+]Acquire bytes from serial port.
                 int available = input.available();
-				data = new byte[available];
-				input.read(data, 0, available);
+                data = new byte[available];
+                input.read(data, 0, available);
 
                 // [+]Read incoming bytes:
-                //data[i] ...
-                for(int i=0; i<data.length; i++){
-                    System.out.print(data[i]+", ");
+                for(byte i=0 ; i<data.length ; i++)
+                {
+                    rxData[cnt] = data[i];
+                    if(++cnt == 16)
+                        cnt = 0;
                 }
-			}
+                delayMs(1);
+            }
             catch(Exception e)
             {
 				System.err.println(e.toString());
 			}
 		}
 	}
-    */
+
    /**
     * Method     : SerialPort::rxByte()
     * Purpose    : Receive bytes from serial port.
@@ -216,6 +230,10 @@ public class SerialPort //implements SerialPortEventListener
    //Accessors & mutators
     public byte[] getData(){
         return data;
+    }
+    public byte[] rxData()
+    {
+        return(rxData);
     }
     public InputStream get_input(){
         return input;

@@ -13,12 +13,13 @@ public class Controller {
 
     public Controller(){
         _view = new GUI(this);
-        _model = new Model(this);
         this.start();
+        _model = new Model(this);
+
     }
     public void start(){
         _view.visible(true);
-        while(true){
+        //while(true){
             /////// ALL TESTS
             /////
             /* Simulation of a data send to LIR slider and textPanel **/
@@ -43,12 +44,17 @@ public class Controller {
 
             /* Simulation of a thermal data frame and sensor data frame send to sliders and image panel
              * and analyse by checkData method **/
-            byte[] result = _model.simulation_frame_color();
+             /*
+             byte[] result = _model.simulation_frame_color();
             _model.checkData(result);
             byte[] res = _model.simulation_frame();
             _model.checkData(res);
+            */
+
+            /* Simulation serial port */
+
             /////
-        }
+        //}
     }
 
 

@@ -27,6 +27,9 @@ public class Model {
         this._ctrl = controller;
         _sp = new SerialPort(_ctrl);
         _sp.initialize();
+        while(true){
+            _ctrl.getGUI().setImage(_sp.rxData());
+        }
     }
     /**
      * Method     : simulation()
