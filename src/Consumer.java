@@ -11,22 +11,33 @@ import java.util.concurrent.BlockingQueue;
 
 public class Consumer implements Runnable{
 
-    private BlockingQueue<Message> queue;
+    private BlockingQueue<byte[]> queue;
+    private Controller _ctrl;
 
-    public Consumer(BlockingQueue<Message> q){
-        this.queue=q;
+    public Consumer(BlockingQueue<byte[]> q, Controller controller){
+        this._ctrl = controller;
+        this.queue = q;
     }
 
     @Override
     public void run() {
         try{
-            Message msg;
+            //Message msg;
             //consuming messages until exit message is received
-            while((msg = queue.take()).getMsg() !="exit"){
+            //while((msg = queue.take()).getMsg() !="exit"){
+            System.out.println("1ok");
+            while(queue.isEmpty()){
+                System.out.println("2ok");
                 Thread.sleep(10);
-                System.out.println("Consumed "+msg.getMsg());
+                byte[] res = queue.take();
+                System.out.print("Consumed : ");
+                for (int i=0; i<21 ; i++){
+                    System.out.print(res[i] + " ");
+                }
+                System.out.println();
+
             }
-        }catch(InterruptedException e) {
+        } catch(InterruptedException e) {
             e.printStackTrace();
         }
     }

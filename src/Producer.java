@@ -12,31 +12,39 @@ import java.util.concurrent.BlockingQueue;
 
 public class Producer implements Runnable {
 
-    private BlockingQueue<Message> queue;
+    private BlockingQueue<byte[]> queue;
+    private Controller _ctrl;
 
-    public Producer(BlockingQueue<Message> q){
+    public Producer(BlockingQueue<byte[]> q, Controller controller){
+        this._ctrl = controller;
         this.queue=q;
     }
     @Override
     public void run() {
         //produce messages
+        byte[] msg;
         for(int i=0; i<100; i++){
-            Message msg = new Message(""+i);
+            msg = _ctrl.getModel().simulation_frame_color();
+
+            //msg = _ctrl.getSerialPort().getData();
+
             try {
-                Thread.sleep(i);
+                //Thread.sleep(i);
+                //System.out.println(msg);
                 queue.put(msg);
-                System.out.println("Produced "+msg.getMsg());
+                //System.out.println("Produced "+msg.getMsg());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         //adding exit message
-        Message msg = new Message("exit");
+        //Message msg = new Message("exit");
+        /*
         try {
             queue.put(msg);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        } */
     }
 
 }
