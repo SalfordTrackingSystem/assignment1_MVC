@@ -5,6 +5,8 @@ import java.awt.*;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,9 +31,20 @@ public class Model {
         this._ctrl = controller;
         _sp = new SerialPort(_ctrl);
         _sp.initialize();
-        //byte data[] = _sp.;
-        while(true){
 
+        //Creating BlockingQueue of size 10
+        BlockingQueue<Message> queue = new ArrayBlockingQueue<>(10);
+        Producer producer = new Producer(queue);
+        Consumer consumer = new Consumer(queue);
+        //starting producer to produce messages in queue
+        new Thread(producer).start();
+        //starting consumer to consume messages from queue
+        new Thread(consumer).start();
+        System.out.println("Producer and Consumer has been started");
+        //byte data[] = _sp.;
+        //while(true){
+            // View frame
+            /*
             for (int i =0;i<21;i++){
             //String str = new String(_sp.rxData(), "UTF_8");
 
@@ -40,9 +53,12 @@ public class Model {
             }
             System.out.println();
             //System.out.println();
-
+            */
+            // Set image data to the GUI
+            /*
             _ctrl.getGUI().setImage(_sp.rxData());
-        }
+            */
+        //}
     }
     /**
      * Method     : simulation()
