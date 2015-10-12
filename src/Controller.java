@@ -25,12 +25,19 @@ public class Controller {
         _model = new Model(this);
         this.startButton();
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         this.stopButton();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        System.out.println("\np_thread" + this.p_thread.isAlive());
+        System.out.println("c_thread"+this.c_thread.isAlive());
         /*try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -98,6 +105,7 @@ public class Controller {
         System.out.println("startButton() called");
         //starting producer to produce messages in queue
         this.p_thread.start();
+
         //starting consumer to consume messages from queue
         this.c_thread.start();
         System.out.println("Producer and Consumer has been started");
@@ -108,12 +116,6 @@ public class Controller {
     }
     public void stopButton(){
         System.out.println("stopButton() called");
-        this.producer.setStateFrame(false);
-
-        //this.p_thread.interrupt();
-        //this.c_thread.interrupt();
-        /*
-        System.out.println("stopButton() called");
         byte[] exit = {};
         String s = "exit";
         exit = s.getBytes();
@@ -121,7 +123,7 @@ public class Controller {
             this.queue.put(exit);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } */
+        }
     }
     public void cleanQueue(BlockingQueue<byte[]> q){
         while(q.isEmpty()){

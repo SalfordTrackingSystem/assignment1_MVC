@@ -26,7 +26,7 @@ public class Consumer implements Runnable{
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         try{
             while(queue.isEmpty() && !stateFrame){
                 byte[] frame = queue.take();
