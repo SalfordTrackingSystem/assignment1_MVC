@@ -20,6 +20,10 @@ import java.util.concurrent.BlockingQueue;
 public class Model {
     private Controller _ctrl;
     private SerialPort _sp;
+    //private BlockingQueue<byte[]> qIR;
+    //private BlockingQueue<byte[]> qTH;
+    //private BlockingQueue<byte[]> qMO;
+
 
     /**
      * Method     : Constructor of Model class
@@ -148,12 +152,49 @@ public class Model {
                 if (data[data.length-1] == frame.SENSOR_LIR.EB){  // if it's true, frame is validated
                     System.out.println("Frame validated => |SB|ID|CRC|CN|EB|");
                     System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
-                    this.applyOnGUI(flag, data);
+                    switchQueue(flag, data);
+                    //this.applyOnGUI(flag, data);
                 }
                 else                                            System.out.println("EB is not valid");
             }
         }
         else                                                    System.out.println("SB is not valid");
+    }
+
+    public void switchQueue(String flag, byte[] data){
+        switch (flag){
+            case "LIR":  // data on the first
+                try {
+                    _ctrl.getQIR().put(data);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+                break;
+            case "RIR":
+                try {
+                    _ctrl.getQIR().put(data);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+                break;
+            case "THE":
+                try {
+                    _ctrl.getQTH().put(data);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+                break;
+            case "MOT":
+                try {
+                    _ctrl.getQMO().put(data);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+                break;
+            default:
+                System.out.println("Invalid NAME");
+                break;
+        }
     }
     /**
      * Method     : applyOnGUI()

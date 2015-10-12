@@ -14,10 +14,20 @@ public class Controller {
     private Model _model;
     private GUI _view;
     private  BlockingQueue<byte[]> queue;
+    private  BlockingQueue<byte[]> qIR;
+    private  BlockingQueue<byte[]> qTH;
+    private  BlockingQueue<byte[]> qMO;
     private Producer producer;
     private Consumer consumer;
+    private ConsumerIR consumerIR;
+    private ConsumerTH consumerTH;
+    private ConsumerMO consumerMO;
     private Thread p_thread;
     private Thread c_thread;
+    private Thread c_IR_thread;
+    private Thread c_TH_thread;
+    private Thread c_MO_thread;
+
 
     public Controller(){
         _view = new GUI(this);
@@ -25,19 +35,18 @@ public class Controller {
         _model = new Model(this);
         this.startButton();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         this.stopButton();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+
         System.out.println("\np_thread" + this.p_thread.isAlive());
         System.out.println("c_thread"+this.c_thread.isAlive());
+        System.out.println("c_IR_thread"+this.c_IR_thread.isAlive());
+        System.out.println("c_TH_thread"+this.c_TH_thread.isAlive());
+        System.out.println("c_MO_thread"+this.c_MO_thread.isAlive());
         /*try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -57,10 +66,21 @@ public class Controller {
     public void start(){
         _view.visible(true);
         this.queue = new ArrayBlockingQueue<>(21);
+        this.qIR = new ArrayBlockingQueue<>(21);
+        this.qTH = new ArrayBlockingQueue<>(21);
+        this.qMO = new ArrayBlockingQueue<>(21);
+        //receive init
         this.producer = new Producer(queue, this);
         this.consumer = new Consumer(queue, producer, this);
         this.p_thread = new Thread(this.producer);
         this.c_thread = new Thread(this.consumer);
+        //thread sensors
+        this.consumerIR = new ConsumerIR(qIR, this);
+        this.c_IR_thread = new Thread(this.consumerIR);
+        this.consumerTH = new ConsumerTH(qTH, this);
+        this.c_TH_thread = new Thread(this.consumerTH);
+        this.consumerMO = new ConsumerMO(qMO, this);
+        this.c_MO_thread = new Thread(this.consumerMO);
         //while(true){
             /////// ALL TESTS
             /////
@@ -105,9 +125,11 @@ public class Controller {
         System.out.println("startButton() called");
         //starting producer to produce messages in queue
         this.p_thread.start();
-
         //starting consumer to consume messages from queue
         this.c_thread.start();
+        this.c_IR_thread.start();
+        this.c_TH_thread.start();
+        this.c_MO_thread.start();
         System.out.println("Producer and Consumer has been started");
     }
     public void restart(){
@@ -121,6 +143,9 @@ public class Controller {
         exit = s.getBytes();
         try {
             this.queue.put(exit);
+            this.qIR.put(exit);
+            this.qTH.put(exit);
+            this.qMO.put(exit);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -161,5 +186,17 @@ public class Controller {
     }
     public SerialPort getSerialPort(){
         return _model.getSerialPort();
+    }
+    public BlockingQueue<byte[]> getQueue(){
+        return this.queue;
+    }
+    public BlockingQueue<byte[]> getQIR(){
+        return this.qIR;
+    }
+    public BlockingQueue<byte[]> getQTH(){
+        return this.qTH;
+    }
+    public BlockingQueue<byte[]> getQMO(){
+        return this.qMO;
     }
 }

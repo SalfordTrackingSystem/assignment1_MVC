@@ -31,6 +31,7 @@ public class Producer implements Runnable {
             //msg = _ctrl.getSerialPort().getData();
             try {
                 queue.put(frame);
+                System.out.println("PUT");
                 //System.out.println("Produced "+msg.getMsg());
             } catch (InterruptedException e) {
                 e.printStackTrace();

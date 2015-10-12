@@ -9,17 +9,15 @@
 
 import java.util.concurrent.BlockingQueue;
 
-public class Consumer implements Runnable{
+public class ConsumerIR implements Runnable{
 
     private BlockingQueue<byte[]> queue;
     private Controller _ctrl;
-    private Producer producer;
     private Boolean stateFrame;
     private String frameStop;
 
-    public Consumer(BlockingQueue<byte[]> q, Producer producer,  Controller controller){
+    public ConsumerIR(BlockingQueue<byte[]> q, Controller controller){
         this._ctrl = controller;
-        this.producer = producer;
         this.stateFrame = false;
         this.frameStop = "";
         this.queue = q;
@@ -30,14 +28,13 @@ public class Consumer implements Runnable{
         try{
             while(queue.isEmpty() && !stateFrame){
                 byte[] frame = queue.take();
-                System.out.print("Consumed : ");
+                System.out.print("Consumed_IR : ");
                 for(int i=0; i<4 ; i++){
-                   this.frameStop += (char)frame[i];
+                    this.frameStop += (char)frame[i];
                     System.out.print(frame[i]+" ");
                 }
                 if(this.frameStop.equals("exit")){
                     stateFrame = true;
-                    this.producer.setStateFrame(false);
                 }else{
                     // Print all frames in the console
                     this.frameStop = "";
@@ -46,7 +43,7 @@ public class Consumer implements Runnable{
                     }
                     System.out.println();
                     ////////////////
-                    _ctrl.getModel().checkData(frame);
+
                 }
             }
         } catch(InterruptedException e) {
