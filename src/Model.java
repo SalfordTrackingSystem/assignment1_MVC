@@ -214,7 +214,7 @@ public class Model {
         byte i = (byte) (rd.nextInt(100)+1);
         byte[] frame = {36, 3, i, i, i, i, i, (byte) 255, (byte) 255, i, i, (byte) 255, (byte) 255, i, i, i, i, i, 124, 0, 37};
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

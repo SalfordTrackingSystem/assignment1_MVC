@@ -1,3 +1,6 @@
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 /**
  * Created with IntelliJ IDEA.
  * User: s.dossantos
@@ -10,11 +13,21 @@ public class Controller {
 
     private Model _model;
     private GUI _view;
+    private  BlockingQueue<byte[]> queue;
 
     public Controller(){
         _view = new GUI(this);
         this.start();
         _model = new Model(this);
+        this.startButton();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        this.stopButton();
 
     }
     public void start(){
@@ -57,6 +70,39 @@ public class Controller {
         //}
     }
 
+
+    // Method relative to queue
+    public void startButton(){
+        this.queue = new ArrayBlockingQueue<>(21);
+        Producer producer = new Producer(queue, this);
+        Consumer consumer = new Consumer(queue, producer, this);
+        //starting producer to produce messages in queue
+        new Thread(producer).start();
+        //starting consumer to consume messages from queue
+        new Thread(consumer).start();
+        System.out.println("Producer and Consumer has been started");
+    }
+    public void stopButton(){
+        System.out.println("stopButton() called");
+        byte[] exit = {};
+        String s = "exit";
+        exit = s.getBytes();
+        try {
+            this.queue.put(exit);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+    public void cleanQueue(BlockingQueue<byte[]> q){
+        while(q.isEmpty()){
+            try {
+                q.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+        System.out.println("Queue is clean");
+    }
 
     // Events Methods
     public void setSliderValue_L_IR(int val){

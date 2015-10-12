@@ -14,37 +14,34 @@ public class Producer implements Runnable {
 
     private BlockingQueue<byte[]> queue;
     private Controller _ctrl;
+    private Boolean stateFrame;
 
     public Producer(BlockingQueue<byte[]> q, Controller controller){
         this._ctrl = controller;
-        this.queue=q;
+        this.stateFrame = true;
+        this.queue = q;
+
     }
     @Override
     public void run() {
         //produce messages
-        byte[] msg;
-        for(int i=0; i<100; i++){
-            msg = _ctrl.getModel().simulation_frame_color();
-
+        byte[] frame;
+        //for(int i=0; i<100; i++){
+        while(stateFrame){
+            frame = _ctrl.getModel().simulation_frame_color();
             //msg = _ctrl.getSerialPort().getData();
-
             try {
-                //Thread.sleep(i);
-                //System.out.println(msg);
-                queue.put(msg);
+                queue.put(frame);
                 //System.out.println("Produced "+msg.getMsg());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        //adding exit message
-        //Message msg = new Message("exit");
-        /*
-        try {
-            queue.put(msg);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } */
+        //}
+
+    }
+    public void setStateFrame(Boolean b){
+        this.stateFrame = b;
     }
 
 }
