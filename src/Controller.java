@@ -14,13 +14,16 @@ public class Controller {
     private Model _model;
     private GUI _view;
     private  BlockingQueue<byte[]> queue;
+    private Producer producer;
+    private Consumer consumer;
+    private Thread p_thread;
+    private Thread c_thread;
 
     public Controller(){
         _view = new GUI(this);
         this.start();
         _model = new Model(this);
         this.startButton();
-
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -28,10 +31,29 @@ public class Controller {
         }
 
         this.stopButton();
+        /*try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
+        this.restart();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        this.stopButton();
+        */
     }
     public void start(){
         _view.visible(true);
+        this.queue = new ArrayBlockingQueue<>(21);
+        this.producer = new Producer(queue, this);
+        this.consumer = new Consumer(queue, producer, this);
+        this.p_thread = new Thread(this.producer);
+        this.c_thread = new Thread(this.consumer);
         //while(true){
             /////// ALL TESTS
             /////
@@ -73,16 +95,24 @@ public class Controller {
 
     // Method relative to queue
     public void startButton(){
-        this.queue = new ArrayBlockingQueue<>(21);
-        Producer producer = new Producer(queue, this);
-        Consumer consumer = new Consumer(queue, producer, this);
+        System.out.println("startButton() called");
         //starting producer to produce messages in queue
-        new Thread(producer).start();
+        this.p_thread.start();
         //starting consumer to consume messages from queue
-        new Thread(consumer).start();
+        this.c_thread.start();
         System.out.println("Producer and Consumer has been started");
     }
+    public void restart(){
+        System.out.println("restart() called");
+        this.producer.setStateFrame(true);
+    }
     public void stopButton(){
+        System.out.println("stopButton() called");
+        this.producer.setStateFrame(false);
+
+        //this.p_thread.interrupt();
+        //this.c_thread.interrupt();
+        /*
         System.out.println("stopButton() called");
         byte[] exit = {};
         String s = "exit";
@@ -91,7 +121,7 @@ public class Controller {
             this.queue.put(exit);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        } */
     }
     public void cleanQueue(BlockingQueue<byte[]> q){
         while(q.isEmpty()){

@@ -42,6 +42,9 @@ public class Producer implements Runnable {
     }
     public void setStateFrame(Boolean b){
         this.stateFrame = b;
+        /*if (b == true)
+            this.run();
+          */
     }
 
 }
