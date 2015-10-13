@@ -33,6 +33,10 @@ public class Controller {
         _view = new GUI(this);
         this.start();
         _model = new Model(this);
+
+
+        //Test multithreading
+        /*
         this.startButton();
         try {
             Thread.sleep(10000);
@@ -52,6 +56,9 @@ public class Controller {
         System.out.println("c_IR_thread"+this.c_IR_thread.isAlive());
         System.out.println("c_TH_thread"+this.c_TH_thread.isAlive());
         System.out.println("c_MO_thread"+this.c_MO_thread.isAlive());
+        ////////////////
+        */
+
         /*try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
