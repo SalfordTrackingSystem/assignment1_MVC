@@ -42,6 +42,11 @@ public class Controller {
 
         this.stopButton();
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         System.out.println("\np_thread" + this.p_thread.isAlive());
         System.out.println("c_thread"+this.c_thread.isAlive());
         System.out.println("c_IR_thread"+this.c_IR_thread.isAlive());

@@ -27,7 +27,7 @@ public class ConsumerTH implements Runnable{
     public synchronized void run() {
         try{
             while(queue.isEmpty() && !stateFrame){
-                Thread.sleep(100);
+                //Thread.sleep(100);
                 byte[] frame = queue.take();
                 System.out.print("Consumed_TH : ");
                 for(int i=0; i<4 ; i++){
@@ -44,6 +44,7 @@ public class ConsumerTH implements Runnable{
                     }
                     System.out.println();
                     ////////////////
+                    _ctrl.getModel().applyOnGUI("THE", frame);
 
                 }
             }

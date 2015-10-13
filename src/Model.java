@@ -202,7 +202,7 @@ public class Model {
      * Returns    : Nothing
      * Notes      : Used to display information into the GUI
      **/
-    private void applyOnGUI(String flag, byte[] data) {
+    public void applyOnGUI(String flag, byte[] data) {
         int dist = 0;
         int color = 0;
         int position = 0;
