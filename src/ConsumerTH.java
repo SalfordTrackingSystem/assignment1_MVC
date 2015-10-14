@@ -16,6 +16,7 @@ public class ConsumerTH implements Runnable{
     private Boolean stateFrame;
     private String frameStop;
 
+
     public ConsumerTH(BlockingQueue<byte[]> q, Controller controller){
         this._ctrl = controller;
         this.stateFrame = false;
