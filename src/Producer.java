@@ -23,14 +23,12 @@ public class Producer implements Runnable {
     }
     @Override
     public synchronized void run() {
-        //produce messages
         byte[] frame;
         try {
             while(stateFrame){
                 System.out.println(stateFrame);
                 frame = _ctrl.getModel().simulation_frame_color();
                 //msg = _ctrl.getSerialPort().getData();
-
                 queue.put(frame);
                 System.out.println("PUT");
                 //System.out.println("Produced "+msg.getMsg());
@@ -44,8 +42,5 @@ public class Producer implements Runnable {
     }
     public void setStateFrame(Boolean b){
         this.stateFrame = b;
-        /*if (b == true)
-            this.run();
-          */
     }
 }

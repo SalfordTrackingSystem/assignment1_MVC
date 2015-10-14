@@ -15,21 +15,18 @@ public class Consumer implements Runnable{
     private Controller _ctrl;
     private Producer producer;
     private Boolean stateFrame;
-    private String frameStop;
 
     public Consumer(BlockingQueue<byte[]> q, Producer producer,  Controller controller){
         this._ctrl = controller;
         this.producer = producer;
         this.stateFrame = true;
-        this.frameStop = "";
         this.queue = q;
     }
 
     @Override
     public synchronized void run() {
         try{
-            while(queue.isEmpty() && !_ctrl.getC_thread().isInterrupted()){
-            //while(!stateFrame){
+            while(queue.isEmpty() && stateFrame){
                 byte[] frame = queue.take();
                 this.handleFrame(frame);
             }
@@ -45,22 +42,12 @@ public class Consumer implements Runnable{
     }
     private void handleFrame(byte[] frame){
         System.out.print("Consumed : ");
-        for(int i=0; i<4 ; i++){
-            this.frameStop += (char)frame[i];
-            System.out.print(frame[i]+" ");
-        }
-        if(this.frameStop.equals("exit")){
-            stateFrame = true;
-            this.producer.setStateFrame(false);
-        }else{
-            // Print all frames in the console
-            this.frameStop = "";
-            for (int i=4; i<21 ; i++){
+        for (int i=0; i<21 ; i++){
                 System.out.print(frame[i] + " ");
             }
-            System.out.println();
-            ////////////////
-            _ctrl.getModel().checkData(frame);
-        }
+        System.out.println();
+        ////////////////
+        _ctrl.getModel().checkData(frame);
     }
 }
+
