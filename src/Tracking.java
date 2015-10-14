@@ -7,13 +7,20 @@
  */
 public class Tracking {
 
-    //Attributs
+    //Attributes
+    //kalman parameter
+    private double q; //process noise covariance
+    private double r; //measurement noise covariance
+    private double x; //value
+    private double p; //estimation error covariance
+    private double k; //kalman gain
+
     private Controller _ctrl;
     private MotorTrack _motorTrack;
     private IRTrack _irTrack;
     private ThermalTrack _thermalTrack;
 
-    //Constructeur
+    //Constructor
     public Tracking(Controller controller) {
         this._ctrl = controller;
         _motorTrack = new MotorTrack(_ctrl);
@@ -21,7 +28,44 @@ public class Tracking {
         _thermalTrack = new ThermalTrack(_ctrl);
     }
 
-    //Accesseurs & Mutateurs
+
+    /**
+     * treatment
+     * @param frame
+     */
+
+    public void treatment(byte[] frame){
+
+    }
+
+    /**
+     * kalman_init
+     * Initialize the parameter for a kalman filter of one dimension
+     * @param q   //process noise covariance
+     * @param r   //measurement noise covariance
+     * @param p   //estimation error covariance
+     * @param initial_value
+     */
+    public void kalman_init(double q, double r, double p, double initial_value){
+        this.q = q;
+        this.r = r;
+        this.p = p;
+        x = initial_value;
+    }
+
+    public void kalman_update(double measurement)
+    {
+        //prediction update
+        //omit x = x
+        p += q;
+
+        //measurement update
+        k = p / (p + r);
+        x = x + k * (measurement - x);
+        p = (1 - k) * p;
+    }
+
+    //Accusers & Mutters
     public MotorTrack get_motorTrack(){
         return _motorTrack;
     }
@@ -30,7 +74,7 @@ public class Tracking {
         return _irTrack;
     }
 
-    public ThermalTrack get_thermalTrackck(){
+    public ThermalTrack get_thermalTrack(){
         return _thermalTrack;
     }
 }

@@ -15,7 +15,6 @@ public class MotorTrack {
     //constucteur
     public MotorTrack(Controller controller){
         this._ctrl=controller;
-
     }
 
 }
