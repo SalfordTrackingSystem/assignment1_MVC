@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 //import java.awt.event.*;
@@ -31,6 +29,13 @@ public class GUI extends JFrame
     private JScrollPane scrollPane;
     private JButton buttonStart;
     private JButton buttonStop;
+    private JRadioButton radioButton_motorCmd;
+    private JTextField textFieldCmd;
+    private JButton sendButton;
+    private JButton LIRButton;
+    private JButton RIRButton;
+    private JButton THEButton;
+    private JButton MOTButton;
     private JPanel tablePanel[][];
     private JFrame frame;
     private byte data[];
@@ -50,6 +55,10 @@ public class GUI extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
+                if(radioButton_motorCmd.isSelected()){
+                    radioButton_motorCmd.setSelected(false);
+                    slider_motor.setEnabled(false);
+                }
                 _ctrl.startButton();
             }
         });
@@ -58,6 +67,28 @@ public class GUI extends JFrame
             public void actionPerformed(ActionEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
                 _ctrl.stopButton();
+            }
+        });
+        radioButton_motorCmd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                if(radioButton_motorCmd.isSelected()){
+                    slider_motor.setEnabled(true);
+                    System.out.println(_ctrl.getProducer().getStateFrame());
+                    if(_ctrl.getProducer().getStateFrame())
+                        _ctrl.stopButton();
+                }else{
+                    slider_motor.setEnabled(false);
+                }
+
+            }
+        });
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                textFieldCmd.getText();
             }
         });
     }

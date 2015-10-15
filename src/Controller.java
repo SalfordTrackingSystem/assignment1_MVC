@@ -29,7 +29,7 @@ public class Controller {
     private Thread c_IR_thread;
     private Thread c_TH_thread;
     private Thread c_MO_thread;
-
+    private int i;
 
     public Controller(){
         _view = new GUI(this);
@@ -38,6 +38,7 @@ public class Controller {
     }
     public void start(){
         _view.visible(true);
+        initQueueProducerConsumer();
 
 
         //while(true){
@@ -77,7 +78,7 @@ public class Controller {
             /////
         //}
     }
-    public void startButton(){
+    public void initQueueProducerConsumer(){
         // Queues
         this.queue = new ArrayBlockingQueue<>(21);
         this.qIR = new ArrayBlockingQueue<>(21);
@@ -95,6 +96,10 @@ public class Controller {
         this.c_TH_thread = new Thread(this.consumerTH);
         this.consumerMO = new ConsumerMO(qMO, this);
         this.c_MO_thread = new Thread(this.consumerMO);
+        System.out.println("initQueueProducerConsumer OK");
+
+    }
+    public void startThread(){
         System.out.println("startButton() called");
         this.p_thread.start();
         this.c_thread.start();
@@ -102,6 +107,17 @@ public class Controller {
         this.c_TH_thread.start();
         this.c_MO_thread.start();
         System.out.println("Producer and Consumer has been started");
+
+    }
+    public void startButton(){
+        System.out.println(i+" :i");
+        if(i == 0){
+            startThread();
+        }else{
+            initQueueProducerConsumer();
+            startThread();
+        }
+        i++;
     }
     public void stopButton(){
         producer.setStateFrame(false);
@@ -161,5 +177,8 @@ public class Controller {
     }
     public Thread getC_thread(){
         return c_thread;
+    }
+    public Producer getProducer(){
+        return producer;
     }
 }

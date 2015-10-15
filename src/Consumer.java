@@ -13,16 +13,13 @@ public class Consumer implements Runnable{
 
     private BlockingQueue<byte[]> queue;
     private Controller _ctrl;
-    private Producer producer;
     private Boolean stateFrame;
 
     public Consumer(BlockingQueue<byte[]> q, Producer producer,  Controller controller){
         this._ctrl = controller;
-        this.producer = producer;
         this.stateFrame = true;
         this.queue = q;
     }
-
     @Override
     public synchronized void run() {
         try{

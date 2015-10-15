@@ -17,6 +17,7 @@ public class Producer implements Runnable {
     private Boolean stateFrame;
 
     public Producer(BlockingQueue<byte[]> q, Controller controller){
+        System.out.println("Producer created");
         this._ctrl = controller;
         this.stateFrame = true;
         this.queue = q;
@@ -37,8 +38,8 @@ public class Producer implements Runnable {
             e.printStackTrace();
         }
     }
-    public Boolean getStateFrame(Boolean b){
-        return stateFrame;
+    public Boolean getStateFrame(){
+        return this.stateFrame;
     }
     public void setStateFrame(Boolean b){
         this.stateFrame = b;

@@ -2,10 +2,9 @@
 * Sensor enumeration to analyse frame
 */
 public enum frame {
-    // 36 => $     37 => %
-
-    SENSOR_LIR("LIR", 36, 2, 37),     // position sensor left
+    // 36 => $     37 => %      ID => in byte 1 = 49
     SENSOR_RIR("RIR", 36, 1, 37),     // position sensor right
+    SENSOR_LIR("LIR", 36, 2, 37),     // position sensor left
     SENSOR_THERMAL("THE", 36, 3, 37), // thermal sensor
     SENSOR_MOTOR("MOT", 36, 4, 37);   // motor position
 

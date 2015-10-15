@@ -20,7 +20,6 @@ public class ConsumerTH implements Runnable{
         this.stateFrame = true;
         this.queue = q;
     }
-
     @Override
     public synchronized void run() {
         try{
