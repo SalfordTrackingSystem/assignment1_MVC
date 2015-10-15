@@ -32,28 +32,16 @@ public class Tracking {
 
 
     /**
-     * treatment
-     * Return left right or "" function of the sensors data
+     * fusion
+     * Decide de la commande moteur
      * @param data
      */
 
-    public String treatment(byte[] data){
-        String dir = "";
-        switch (data[1]){
-            case 1:                //LIR
-                dir = _irTrack.rightOrLeft(data);
-                break;
-            case 2 :                //RIR
-                dir = _irTrack.rightOrLeft(data);
-                break;
-            case 3:                 //Thermal
-                break;
-            case 4:                 //motor
-                break;
-            default :
-                System.out.println("L'ID n'est pas bon");
-        }
-        return dir;
+    public String fusion(byte[] data, int distance){
+        String side = "";
+        int dist= distance;
+
+        return side;
     }
 
     /**

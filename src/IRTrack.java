@@ -20,28 +20,23 @@ public class IRTrack {
     /**
      * rightOrLeft
      * Return a string right or left function of the data
-     * @param data
+     * @param distanceL,distanceR
      * @return
      */
-    public String rightOrLeft(byte[] data){
-        String side = "";
-        marge = 100;                            //erreur capteur
+    public String rightOrLeftIR(int distanceR,int distanceL){
+        String side = "idle";
+        marge = 100;
+        if (distanceR > 200 && distanceR< 1500 && distanceL > 200 && distanceL< 1500){            //Test if sensor data are out of range
 
-        if (data[1] == frame.SENSOR_LIR.ID){
-            distanceL = (int)data[2];
-            distanceL <<= 8;
-            distanceL |= data[3];
+            if (distanceL < distanceR - marge){
+                side = "left";
+            }
+            else if(distanceL > distanceR + marge){
+                side = "right";
+            }
         }
-        else if(data[1] == frame.SENSOR_RIR.ID){
-            distanceR = (int)data[2];
-            distanceR <<= 8;
-            distanceR |= data[3];
-        }
-        if (distanceL < distanceR - marge){
-            side = "left";
-        }
-        else if(distanceL>distanceR+marge){
-            side = "right";
+        else {
+            System.out.println("Out of range");
         }
         return side;
     }

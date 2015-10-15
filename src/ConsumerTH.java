@@ -38,6 +38,7 @@ public class ConsumerTH implements Runnable{
             System.out.print(frame[i] + " ");
         System.out.println();
         ////////////////
+
         _ctrl.getModel().applyOnGUI("THE", frame);
     }
 }

@@ -287,6 +287,8 @@ public class Model {
     }
 
 
+
+ //Acceseurs
     /**
      * Method     : getSerialPort()
      * Returns    : data from the serial port
@@ -295,4 +297,10 @@ public class Model {
     public SerialPort getSerialPort(){
         return _sp;
     }
+
+    public Tracking get_track(){
+        return _track;
+
+    }
+
 }
