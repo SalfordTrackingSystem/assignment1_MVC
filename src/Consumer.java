@@ -15,42 +15,39 @@ public class Consumer implements Runnable{
     private Controller _ctrl;
     private Producer producer;
     private Boolean stateFrame;
-    private String frameStop;
 
     public Consumer(BlockingQueue<byte[]> q, Producer producer,  Controller controller){
         this._ctrl = controller;
         this.producer = producer;
-        this.stateFrame = false;
-        this.frameStop = "";
+        this.stateFrame = true;
         this.queue = q;
     }
 
     @Override
     public synchronized void run() {
         try{
-            while(queue.isEmpty() && !stateFrame){
+            while(queue.isEmpty() && stateFrame){
                 byte[] frame = queue.take();
-                System.out.print("Consumed : ");
-                for(int i=0; i<4 ; i++){
-                   this.frameStop += (char)frame[i];
-                    System.out.print(frame[i]+" ");
-                }
-                if(this.frameStop.equals("exit")){
-                    stateFrame = true;
-                    this.producer.setStateFrame(false);
-                }else{
-                    // Print all frames in the console
-                    this.frameStop = "";
-                    for (int i=4; i<21 ; i++){
-                        System.out.print(frame[i] + " ");
-                    }
-                    System.out.println();
-                    ////////////////
-                    _ctrl.getModel().checkData(frame);
-                }
+                this.handleFrame(frame);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
     }
+    public void setStateFrame(Boolean b){
+        this.stateFrame = b;
+    }
+    public Boolean getStateFrame(){
+        return this.stateFrame;
+    }
+    private void handleFrame(byte[] frame){
+        System.out.print("Consumed : ");
+        for (int i=0; i<21 ; i++){
+                System.out.print(frame[i] + " ");
+            }
+        System.out.println();
+        ////////////////
+        _ctrl.getModel().checkData(frame);
+    }
 }
+

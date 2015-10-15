@@ -20,29 +20,27 @@ public class Producer implements Runnable {
         this._ctrl = controller;
         this.stateFrame = true;
         this.queue = q;
-
     }
     @Override
     public synchronized void run() {
-        //produce messages
         byte[] frame;
-        while(stateFrame){
-            frame = _ctrl.getModel().simulation_frame_color();
-            //msg = _ctrl.getSerialPort().getData();
-            try {
+        try {
+            while(stateFrame){
+                System.out.println(stateFrame);
+                frame = _ctrl.getModel().simulation_frame_color();
+                //msg = _ctrl.getSerialPort().getData();
                 queue.put(frame);
                 System.out.println("PUT");
                 //System.out.println("Produced "+msg.getMsg());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+    }
+    public Boolean getStateFrame(Boolean b){
+        return stateFrame;
     }
     public void setStateFrame(Boolean b){
         this.stateFrame = b;
-        /*if (b == true)
-            this.run();
-          */
     }
-
 }

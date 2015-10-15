@@ -4,6 +4,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 //import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -28,6 +29,8 @@ public class GUI extends JFrame
     private JSlider slider_motor;
     private JTextPane textPane;
     private JScrollPane scrollPane;
+    private JButton buttonStart;
+    private JButton buttonStop;
     private JPanel tablePanel[][];
     private JFrame frame;
     private byte data[];
@@ -41,6 +44,20 @@ public class GUI extends JFrame
         scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
             public void adjustmentValueChanged(AdjustmentEvent e) {
                 e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+            }
+        });
+        buttonStart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                _ctrl.startButton();
+            }
+        });
+        buttonStop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                _ctrl.stopButton();
             }
         });
     }
