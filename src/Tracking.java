@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 /**
  * Created with IntelliJ IDEA.
  * User: v.gaubert
@@ -31,11 +33,27 @@ public class Tracking {
 
     /**
      * treatment
-     * @param frame
+     * Return left right or "" function of the sensors data
+     * @param data
      */
 
-    public void treatment(byte[] frame){
-
+    public String treatment(byte[] data){
+        String dir = "";
+        switch (data[1]){
+            case 1:                //LIR
+                dir = _irTrack.rightOrLeft(data);
+                break;
+            case 2 :                //RIR
+                dir = _irTrack.rightOrLeft(data);
+                break;
+            case 3:                 //Thermal
+                break;
+            case 4:                 //motor
+                break;
+            default :
+                System.out.println("L'ID n'est pas bon");
+        }
+        return dir;
     }
 
     /**
@@ -53,6 +71,11 @@ public class Tracking {
         x = initial_value;
     }
 
+    /**
+     * kalman_update
+     * Update the value of the measurment vector
+     * @param measurement
+     */
     public void kalman_update(double measurement)
     {
         //prediction update
