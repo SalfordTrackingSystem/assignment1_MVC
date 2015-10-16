@@ -18,7 +18,7 @@ public class IRTrack {
     }
 
     /**
-     * rightOrLeft
+     * rightOrLeftIR
      * Return a string right or left function of the data
      * @param distanceL,distanceR
      * @return
@@ -26,8 +26,8 @@ public class IRTrack {
     public String rightOrLeftIR(int distanceR,int distanceL){
         String side = "idle";
         marge = 100;
-        if (distanceR > 200 && distanceR< 1500 && distanceL > 200 && distanceL< 1500){            //Test if sensor data are out of range
-
+        if (distanceR > 200 && distanceR< 1500 && distanceL > 200 && distanceL< 1500)           //Sensor data are into range
+        {
             if (distanceL < distanceR - marge){
                 side = "left";
             }
@@ -35,9 +35,19 @@ public class IRTrack {
                 side = "right";
             }
         }
+        else if ((distanceL < 200 || distanceL > 1500) && distanceR > 200 && distanceR< 1500)   //IRleft out of range
+        {
+            side = "left";
+        }
+        else if ((distanceR < 200 || distanceR > 1500) && distanceL > 200 && distanceL< 1500)   //IRright out of range
+        {
+            side = "right";
+        }
         else {
+            side ="idle";
             System.out.println("Out of range");
         }
+
         return side;
     }
 }
