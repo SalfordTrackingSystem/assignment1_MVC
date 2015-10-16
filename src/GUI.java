@@ -88,7 +88,25 @@ public class GUI extends JFrame
             @Override
             public void actionPerformed(ActionEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
-                textFieldCmd.getText();
+                //textPane.setText(+);   // set a cmd with
+                setValue_textPanel(textFieldCmd.getText(), "cmd send => ");
+                textFieldCmd.setText("");
+
+            }
+        });
+        LIRButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                setValue_textPanel("#1", "L-IR cmd send => ");
+            }
+        });
+        RIRButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                setValue_textPanel("#2", "R-IR cmd send => ");
+
             }
         });
     }
