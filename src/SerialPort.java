@@ -38,7 +38,7 @@ public class SerialPort implements SerialPortEventListener
     {
         //"/dev/tty.usbserial-A9007UX1", // Mac OS X
         //"/dev/ttyUSB0",                // Linux
-        "COM4"                         // Windows
+        "COM1"                         // Windows
     };
 
 	private InputStream input;                 // Buffered input stream from the port.
@@ -150,6 +150,17 @@ public class SerialPort implements SerialPortEventListener
                 data = new byte[available];
                 input.read(data, 0, available);
 
+                // [+]Read incoming bytes:
+                for(byte i=0 ; i<data.length ; i++)
+                {
+                    rxData[cnt] = data[i];
+                    System.out.print(rxData[i] + " ");
+                    if(++cnt == 21)
+                        cnt = 0;
+                }
+                System.out.println();
+
+                 /*
                 if(data[0] == (byte)35 && data[1] == (byte)65)  // if #A
                 {
                     cmdOK = true;
@@ -179,7 +190,7 @@ public class SerialPort implements SerialPortEventListener
                     {
                         txByte(nac[i]);
                     }
-                }
+                }    */
             }
             catch(Exception e)
             {

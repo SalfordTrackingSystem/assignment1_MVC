@@ -99,6 +99,8 @@ public class GUI extends JFrame
             public void actionPerformed(ActionEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
                 setValue_textPanel("#1", "L-IR cmd send => ");
+                _ctrl.getSerialPort().txByte((byte)'#');
+                _ctrl.getSerialPort().txByte((byte)'1');
             }
         });
         RIRButton.addActionListener(new ActionListener() {
