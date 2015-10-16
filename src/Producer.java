@@ -27,8 +27,8 @@ public class Producer implements Runnable {
         byte[] frame;
         try {
             while(stateFrame){
-                //frame = _ctrl.getModel().simulation_frame_color();
-                frame = _ctrl.getSerialPort().rxData();
+                frame = _ctrl.getModel().simulation_frame_color();
+                //frame = _ctrl.getSerialPort().rxData();
                 queue.put(frame);
                 _ctrl.getSerialPort().resetRxData();
             }

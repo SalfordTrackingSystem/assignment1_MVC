@@ -37,6 +37,6 @@ public class ConsumerMO implements Runnable{
             System.out.print(frame[i] + " ");
         System.out.println();
         ////////////////
-        _ctrl.getModel().applyOnGUI("MOT", frame);
+        _ctrl.getModel().applyOnGUI("MOT",0, frame);
     }
 }

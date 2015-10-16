@@ -41,6 +41,7 @@ public class Model {
         long timeout = 0;
 
         // claim data every 50ms
+        /* Pilou function
         while (true)
         {
             if(timeout >= 50) //50ms
@@ -56,6 +57,7 @@ public class Model {
                 timeout = actualTime - time;
             }
         }
+        */
         //byte data[] = _sp.;
         //while(true){
             // View frame

@@ -7,9 +7,6 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 
 //import gnu.io.SerialPort;
-
-
-
 /**
  * Created by Theo Theodoridis.
  * Class    : SerialPort
