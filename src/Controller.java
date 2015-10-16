@@ -35,12 +35,17 @@ public class Controller {
         _view = new GUI(this);
         this.start();
         _model = new Model(this);
+
     }
     public void start(){
         _view.visible(true);
         initQueueProducerConsumer();
-
-
+         /*
+        _model.getSerialPort().collectData((byte)frame.SENSOR_RIR.ID);
+        _model.getSerialPort().collectData((byte)frame.SENSOR_LIR.ID);
+        _model.getSerialPort().collectData((byte)frame.SENSOR_THERMAL.ID);
+        _model.getSerialPort().collectData((byte)frame.SENSOR_MOTOR.ID);
+        */
         //while(true){
             /////// ALL TESTS
             /////

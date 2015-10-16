@@ -1,12 +1,7 @@
-import sun.misc.ASCIICaseInsensitiveComparator;
-
 import javax.swing.*;
 import java.awt.*;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,8 +30,26 @@ public class Model {
         this._ctrl = controller;
         _sp = new SerialPort(_ctrl);
         _sp.initialize();
+        long time = System.currentTimeMillis();
+        long actualTime = 0;
+        long timeout = 0;
 
-        //while(true);
+        // claim data every 50ms
+        while (true)
+        {
+            if(timeout >= 50) //50ms
+            {
+                _ctrl.getSerialPort().requestData((byte)1);
+                _ctrl.getSerialPort().requestData((byte)2);
+                _ctrl.getSerialPort().requestData((byte)3);
+                _ctrl.getSerialPort().requestData((byte)4);
+                timeout = 0;
+                time = System.currentTimeMillis();
+            }else{
+                actualTime = System.currentTimeMillis();
+                timeout = actualTime - time;
+            }
+        }
         //byte data[] = _sp.;
         //while(true){
             // View frame
@@ -294,4 +307,5 @@ public class Model {
     public SerialPort getSerialPort(){
         return _sp;
     }
+
 }

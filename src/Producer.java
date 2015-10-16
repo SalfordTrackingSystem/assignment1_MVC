@@ -27,17 +27,17 @@ public class Producer implements Runnable {
         byte[] frame;
         try {
             while(stateFrame){
-                System.out.println(stateFrame);
-                frame = _ctrl.getModel().simulation_frame_color();
-                //msg = _ctrl.getSerialPort().getData();
+                //frame = _ctrl.getModel().simulation_frame_color();
+                frame = _ctrl.getSerialPort().rxData();
                 queue.put(frame);
-                System.out.println("PUT");
-                //System.out.println("Produced "+msg.getMsg());
+                _ctrl.getSerialPort().resetRxData();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+
     public Boolean getStateFrame(){
         return this.stateFrame;
     }

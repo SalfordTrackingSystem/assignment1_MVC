@@ -1,13 +1,13 @@
-import java.io.File;
-import java.io.FileOutputStream;
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
-import com.sun.org.apache.xerces.internal.impl.io.ASCIIReader;
-import gnu.io.SerialPortEvent;
-import gnu.io.CommPortIdentifier;
-import gnu.io.SerialPortEventListener;
+//import gnu.io.SerialPort;
+
 
 
 /**
@@ -24,6 +24,13 @@ public class SerialPort implements SerialPortEventListener
 {
 	private byte data[] = null;
     private byte rxData[] = new byte[21];
+    private byte ack[] = {35, 65};   // #A
+    private byte nac[] = {35, 78};   // #N
+    private boolean cmdOK = false;
+    private boolean cmdNOK = false;
+    private byte sensor = 0;
+
+    //private byte[] frameTest = {36, 50, 51, 52, 52, 53, 54, 55, 56, 57, 58, 59, 60, 0, 0, 0, 0, 0, 0, 0, 37};
     //private byte dataSerial[] = new byte[21];
     private int cnt = 0;
     //private byte rxByteSerial = 0;
@@ -34,7 +41,7 @@ public class SerialPort implements SerialPortEventListener
     {
         //"/dev/tty.usbserial-A9007UX1", // Mac OS X
         //"/dev/ttyUSB0",                // Linux
-        "COM13"                         // Windows
+        "COM4"                         // Windows
     };
 
 	private InputStream input;                 // Buffered input stream from the port.
@@ -142,18 +149,40 @@ public class SerialPort implements SerialPortEventListener
 			try
             {
                 // [+]Acquire bytes from serial port.
-                int available = input.available();
+                int available = input.available();  //return number of bytes available in the message
                 data = new byte[available];
                 input.read(data, 0, available);
 
-                // [+]Read incoming bytes:
-                for(byte i=0 ; i<data.length ; i++)
+                if(data[0] == (byte)35 && data[1] == (byte)65)  // if #A
                 {
-                    rxData[cnt] = data[i];
-                    if(++cnt == 21)
-                        cnt = 0;
+                    cmdOK = true;
+                }else if(data[0] == (byte)35 && data[1] == (byte)78)  // if #N
+                {
+                    //cmdNOK = true;
+                    requestData(sensor);
                 }
-                delayMs(1);
+
+                if(cmdOK && data[0] == (byte)36 && data[20] == (byte)37)  // if frame is valid  $...%
+                {
+                    // [+]Read incoming bytes:
+                    for(byte i=0 ; i<data.length ; i++)
+                    {
+                        rxData[cnt] = data[i];
+                        if(++cnt == 21)
+                            cnt = 0;
+                    }
+                    for(int i = 0; i < ack.length; i++) // send ack
+                    {
+                        txByte(ack[i]);
+                    }
+                    cmdOK = false;
+                    delayMs(1);
+                }else {
+                    for(int i = 0; i < nac.length; i++)
+                    {
+                        txByte(nac[i]);
+                    }
+                }
             }
             catch(Exception e)
             {
@@ -193,6 +222,30 @@ public class SerialPort implements SerialPortEventListener
         }
     }
 
+    public void rxByte()
+    {
+        try
+        {
+            // [+]Acquire bytes from serial port.
+            int available = input.available();  //return number of bytes available in the message
+            data = new byte[available];
+            input.read(data, 0, available);
+
+            // [+]Read incoming bytes:
+            for(byte i=0 ; i<data.length ; i++)
+            {
+                rxData[cnt] = data[i];
+                if(++cnt == 21)
+                    cnt = 0;
+            }
+            delayMs(1);
+        }
+        catch(Exception e)
+        {
+            System.err.println(e.toString());
+        }
+    }
+
    /**
     * Method     : Delay::delayMs()
     * Purpose    : To delay in milliseconds (ms).
@@ -225,7 +278,7 @@ public class SerialPort implements SerialPortEventListener
 		SerialPort sp = new SerialPort();
 		sp.initialize();
 	}
-     */
+    */
 
    //Accessors & mutators
     public byte[] getData(){
@@ -238,4 +291,61 @@ public class SerialPort implements SerialPortEventListener
     public InputStream get_input(){
         return input;
     }
+
+    public void requestData(byte sensor)
+    {
+        this.sensor = sensor;
+        byte[] claimData = {36, sensor, 37};     //$1%
+        for (int i=0; i< claimData.length; i++)
+        {
+            txByte(claimData[i]);
+        }
+    }
+
+    public void requestData(byte[] sensor)
+    {
+        for (int i=0; i< sensor.length; i++)
+        {
+            txByte(sensor[i]);
+        }
+    }
+
+    public void resetRxData()
+    {
+        cnt = 0;
+        for(int i=0; i<21; i++)
+        {
+            rxData[i] = 0;
+        }
+    }
+    /*
+    public void timer (boolean state)
+    {
+        long time = System.currentTimeMillis();
+        long actualTime = 0;
+        long timeout = 0;
+
+        while(state == true)
+        {
+            if(timeout >= 50) //50ms
+            {
+                requestData(sensor);
+            }else{
+                actualTime = System.currentTimeMillis();
+                timeout = actualTime - time;
+            }
+        }
+    }*/
+
+
+    public byte[] getAck()
+    {
+        return ack;
+    }
+
+    public byte[] getNac()
+    {
+        return nac;
+    }
+
 }
