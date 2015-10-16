@@ -14,6 +14,7 @@ public class ConsumerIR implements Runnable{
     private BlockingQueue<byte[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
+    private String cmd;
 
     public ConsumerIR(BlockingQueue<byte[]> q, Controller controller){
         this._ctrl = controller;
@@ -25,7 +26,10 @@ public class ConsumerIR implements Runnable{
         try{
             while(queue.isEmpty() && stateFrame){
                 byte[] frame = queue.take();
-                this.handleFrame(frame);
+                cmd = this.handleFrame(frame);
+                if (cmd=="right"||cmd=="left"){
+                    _ctrl.getModel().cmdToSend(cmd);
+                }
             }
         } catch(InterruptedException e) {
             e.printStackTrace();

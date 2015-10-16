@@ -10,7 +10,6 @@
 public class ThermalTrack {
 
     //Attributes
-
     private Controller _ctrl;
 
     //Constructor
@@ -29,7 +28,7 @@ public class ThermalTrack {
         int marge =20;                         //Error of thermal sensor = 0.14° -> 14 in byte
         int cnt=0;
         int moyenneR=0, moyenneL=0,sumL=0,sumR=0;
-        for(int i=0 ; i<16 ; i++){
+        for(int i=0 ; i<16 ; i++){             // Boucle permettant de faire la somme des valeurs des pixels de gauche
             sumL += THdata[i];
             cnt++;
             if(cnt==2){
@@ -38,7 +37,8 @@ public class ThermalTrack {
             }
         }
         moyenneL = sumL/8;
-        for(int i=2 ; i<16 ; i++){
+        cnt =0;
+        for(int i=2 ; i<16 ; i++){            // Boucle permettant de faire la somme des valeurs des pixels de droite
             sumR += THdata[i];
             cnt++;
             if(cnt==2){
@@ -47,6 +47,8 @@ public class ThermalTrack {
             }
         }
         moyenneR = sumR/8;
+
+        //Compare les deux moyennes et en déduire une direction pour commander le moteur
         if (moyenneL>moyenneR + marge){
             side = "left";
         }

@@ -34,6 +34,7 @@ public class Model {
      **/
     public Model(Controller controller){
         this._ctrl = controller;
+        this._track = new Tracking(_ctrl);
         _sp = new SerialPort(_ctrl);
         _sp.initialize();
         long time = System.currentTimeMillis();
@@ -182,6 +183,12 @@ public class Model {
         else                                                    System.out.println("SB is not valid");
     }
 
+    /**
+     * switchQueue()
+     * Put in the right Queue the data function of the flag
+     * @param flag
+     * @param data
+     */
     public void switchQueue(String flag, byte[] data){
         switch (flag){
             case "LIR":  // data on the first
@@ -300,6 +307,16 @@ public class Model {
         } */
     }
 
+    public byte cmdToSend(String cmd){
+        byte cmdMotor = 0;
+        if (cmd == "right"){
+            cmdMotor = 5;
+        }
+        else if (cmd == "left"){
+            cmdMotor =6;
+        }
+        return cmdMotor;
+    }
 
 
  //Acceseurs
@@ -312,6 +329,11 @@ public class Model {
         return _sp;
     }
 
+    /**
+     * get_track()
+     * return _track
+     * @return _track
+     */
     public Tracking get_track(){
         return _track;
 
