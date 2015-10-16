@@ -32,12 +32,17 @@ public class ConsumerTH implements Runnable{
         }
     }
     private void handleFrame(byte[] frame){
+        String cmdTH;
         System.out.print("Consumed : ");
         for (int i=0; i<21 ; i++)
             System.out.print(frame[i] + " ");
         System.out.println();
         ////////////////
-        _ctrl.getModel().get_track().get_thermalTrack().rightOrLeftTH(frame);
+        cmdTH = _ctrl.getModel().get_track().get_thermalTrack().rightOrLeftTH(frame);
         _ctrl.getModel().applyOnGUI("THE",0, frame);
+        if (cmdTH=="right"||cmdTH=="left"){
+            _ctrl.getModel().cmdToSend(cmdTH);
+        }
+
     }
 }

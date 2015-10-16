@@ -307,7 +307,7 @@ public class Model {
         } */
     }
 
-    public byte cmdToSend(String cmd){
+    public void cmdToSend(String cmd){
         byte cmdMotor = 0;
         if (cmd == "right"){
             cmdMotor = 5;
@@ -315,7 +315,7 @@ public class Model {
         else if (cmd == "left"){
             cmdMotor =6;
         }
-        return cmdMotor;
+        _sp.txByte(cmdMotor);
     }
 
 

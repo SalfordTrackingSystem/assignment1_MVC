@@ -14,7 +14,9 @@ public class ConsumerIR implements Runnable{
     private BlockingQueue<byte[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
-    private String cmd;
+    private int distanceL;
+    private int distanceR;
+
 
     public ConsumerIR(BlockingQueue<byte[]> q, Controller controller){
         this._ctrl = controller;
@@ -26,10 +28,7 @@ public class ConsumerIR implements Runnable{
         try{
             while(queue.isEmpty() && stateFrame){
                 byte[] frame = queue.take();
-                cmd = this.handleFrame(frame);
-                if (cmd=="right"||cmd=="left"){
-                    _ctrl.getModel().cmdToSend(cmd);
-                }
+                this.handleFrame(frame);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
@@ -42,8 +41,8 @@ public class ConsumerIR implements Runnable{
      * @param data
      * @return
      */
-    private String handleFrame(byte[] data){
-        int distanceL=0, distanceR =0;
+    private void handleFrame(byte[] data){
+
         String cmd;
 
         System.out.print("Consumed : ");
@@ -66,7 +65,8 @@ public class ConsumerIR implements Runnable{
             _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
-
-        return cmd;
+        if (cmd=="right"||cmd=="left"){
+            _ctrl.getModel().cmdToSend(cmd);
+        }
     }
 }
