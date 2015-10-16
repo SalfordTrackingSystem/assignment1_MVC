@@ -48,20 +48,22 @@ public class ConsumerIR implements Runnable{
             System.out.print(data[i] + " ");
         System.out.println();
 
-        if( data[1] == frame.SENSOR_LIR.ID){
+        if( data[1] == frame.SENSOR_LIR.ID)         //Stock distanceL and send it to GUI
+        {
             distanceL = (int)data[2];
             distanceL <<= 8;
             distanceL |= data[3];
+            _ctrl.getModel().applyOnGUI("LIR", distanceL, data);
         }
-        else{
+        else if (data[1] == frame.SENSOR_RIR.ID)    //Stock distanceR and send it to GUI
+        {
             distanceR = (int)data[2];
             distanceR<<= 8;
             distanceR |= data[3];
+            _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
-
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
-        //_ctrl.getModel().applyOnGUI("LIR", frame);
-        //_ctrl.getModel().applyOnGUI("RIR", frame);
+
         return cmd;
     }
 }

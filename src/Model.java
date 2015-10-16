@@ -203,22 +203,16 @@ public class Model {
      * Returns    : Nothing
      * Notes      : Used to display information into the GUI
      **/
-    public void applyOnGUI(String flag, byte[] data) {
-        int dist = 0;
+    public void applyOnGUI(String flag, int dist, byte[] data) {
+
         int color = 0;
         int position = 0;
         switch (flag){
             case "LIR":  // data on the first
-                dist = (int)data[2];
-                dist <<= 8;
-                dist |= data[3];
                 _ctrl.getGUI().setValue_L_IR(dist);
                 _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
                 break;
             case "RIR":
-                dist = (int)data[2];
-                dist <<= 8;
-                dist |= data[3];
                 _ctrl.getGUI().setValue_R_IR(dist);
                 _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> R_IR_setTo : ");
                 break;
