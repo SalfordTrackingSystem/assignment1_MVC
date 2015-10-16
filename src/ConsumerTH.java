@@ -37,6 +37,7 @@ public class ConsumerTH implements Runnable{
             System.out.print(frame[i] + " ");
         System.out.println();
         ////////////////
-        _ctrl.getModel().applyOnGUI("THE", frame);
+        _ctrl.getModel().get_track().get_thermalTrack().rightOrLeftTH(frame);
+        _ctrl.getModel().applyOnGUI("THE",0, frame);
     }
 }

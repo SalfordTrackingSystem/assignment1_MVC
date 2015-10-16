@@ -1,7 +1,12 @@
+import sun.misc.ASCIICaseInsensitiveComparator;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
-
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +20,7 @@ import java.util.Random;
 public class Model {
     private Controller _ctrl;
     private SerialPort _sp;
+    private Tracking _track;
     //private BlockingQueue<byte[]> qIR;
     //private BlockingQueue<byte[]> qTH;
     //private BlockingQueue<byte[]> qMO;
@@ -215,22 +221,16 @@ public class Model {
      * Returns    : Nothing
      * Notes      : Used to display information into the GUI
      **/
-    public void applyOnGUI(String flag, byte[] data) {
-        int dist = 0;
+    public void applyOnGUI(String flag, int dist, byte[] data) {
+
         int color = 0;
         int position = 0;
         switch (flag){
             case "LIR":  // data on the first
-                dist = (int)data[2];
-                dist <<= 8;
-                dist |= data[3];
                 _ctrl.getGUI().setValue_L_IR(dist);
                 _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
                 break;
             case "RIR":
-                dist = (int)data[2];
-                dist <<= 8;
-                dist |= data[3];
                 _ctrl.getGUI().setValue_R_IR(dist);
                 _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> R_IR_setTo : ");
                 break;
@@ -299,6 +299,8 @@ public class Model {
     }
 
 
+
+ //Acceseurs
     /**
      * Method     : getSerialPort()
      * Returns    : data from the serial port
@@ -306,6 +308,11 @@ public class Model {
      **/
     public SerialPort getSerialPort(){
         return _sp;
+    }
+
+    public Tracking get_track(){
+        return _track;
+
     }
 
 }
