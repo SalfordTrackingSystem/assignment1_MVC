@@ -224,7 +224,7 @@ public class Model {
      * Returns    : Nothing
      * Notes      : Used to display information into the GUI
      **/
-    public void applyOnGUI(String flag, int dist, byte[] data) {
+    public void applyOnGUI(String flag, int dist, int[] data) {
 
         int color = 0;
         int position = 0;
@@ -266,11 +266,11 @@ public class Model {
      * Returns    : 16 bits frame with |SB|ID|CRC|CN|EB|
      * Notes      : Used to simulate thermal frame each second
      **/
-    public int[] simulation_frame_color(){
+    public byte[] simulation_frame_color(){
         Random rd = new Random();
         byte i = (byte) (rd.nextInt(100)+1);
         byte[] frameSigned = {(byte)'#',(byte)'A',36, 3, i, i, i, i, i, (byte) 255, (byte) 255, i, i, (byte) 255, (byte) 255, i, i, i, i, i, 124, 0, 37};
-        int[] frame = new int[frameSigned.length];
+        //int[] frame = new int[frameSigned.length];
 
         try {
             Thread.sleep(100);
@@ -278,11 +278,20 @@ public class Model {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         //System.out.println(frame[0]);
+        /*
         for(int j=0;j<frameSigned.length;j++){
             frame[j] = (frameSigned[j] & 0xFF);
-        }
-        return (frame);
+        } */
+        return (frameSigned);
     }
+
+public int[] signedToUnsignedArray(byte[] f){
+    int[] unsignedArray = new int[f.length];
+    for(int j=0;j<f.length;j++){
+        unsignedArray[j] = (f[j] & 0xFF);
+    }
+    return unsignedArray;
+}
     /**
      * Method     : changedColor()
      * Parameters : JPanel[][] tablePanel (image panel), JPanel imagePanel(image), byte[] frame(sensor frame)

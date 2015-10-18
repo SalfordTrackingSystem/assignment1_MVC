@@ -35,12 +35,10 @@ public class ConsumerIR implements Runnable{
     }
 
     /**
-     * handleframe
-     * Permet de renvoyer la commande en fonction des donnée des capteur IR
+     *
      * @param data
-     * @return
      */
-    private String handleFrame(int[] data){
+    private void handleFrame(int[] data){
         int distanceL=0, distanceR =0;
         String cmd;
 
@@ -54,14 +52,14 @@ public class ConsumerIR implements Runnable{
             distanceL = (int)data[2];
             distanceL <<= 8;
             distanceL |= data[3];
-            //_ctrl.getModel().applyOnGUI("LIR", distanceL, data);
+            _ctrl.getModel().applyOnGUI("LIR", distanceL, data);
         }
         else if (data[1] == frame.SENSOR_RIR.ID)    //Stock distanceR and send it to GUI
         {
             distanceR = (int)data[2];
             distanceR<<= 8;
             distanceR |= data[3];
-            //_ctrl.getModel().applyOnGUI("RIR", distanceR, data);
+            _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
         if (cmd=="right"||cmd=="left"){

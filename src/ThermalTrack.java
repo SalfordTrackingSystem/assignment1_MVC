@@ -23,7 +23,7 @@ public class ThermalTrack {
      * @param THdata
      * @return
      */
-    public String rightOrLeftTH(byte[] THdata){
+    public String rightOrLeftTH(int[] THdata){
         String side = "idle";
         int marge =20;                         //Error of thermal sensor = 0.14° -> 14 in byte
         int cnt=0;

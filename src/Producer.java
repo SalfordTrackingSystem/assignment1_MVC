@@ -24,16 +24,18 @@ public class Producer implements Runnable {
     }
     @Override
     public synchronized void run() {
-        int[] frame;
+        byte[] frameSigned;
+        int[] frameUnsigned;
         try {
             while(stateFrame){
-                frame = _ctrl.getModel().simulation_frame_color();
-                //frame = _ctrl.getSerialPort().rxData();
-                if (handleFrame(frame)){
-                    frame = takeGoodFrame(frame);
-                    queue.put(frame);
+                frameSigned = _ctrl.getModel().simulation_frame_color();
+                //frameSigned = _ctrl.getSerialPort().rxData();
+                frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned);
+                if (handleFrame(frameUnsigned)){
+                    frameUnsigned = takeGoodFrame(frameUnsigned);
+                    queue.put(frameUnsigned);
                 }
-                _ctrl.getSerialPort().resetRxData();
+                //_ctrl.getSerialPort().resetRxData();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
