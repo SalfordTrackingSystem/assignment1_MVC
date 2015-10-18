@@ -11,11 +11,11 @@ import java.util.concurrent.BlockingQueue;
 
 public class ConsumerTH implements Runnable{
 
-    private BlockingQueue<byte[]> queue;
+    private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
 
-    public ConsumerTH(BlockingQueue<byte[]> q, Controller controller){
+    public ConsumerTH(BlockingQueue<int[]> q, Controller controller){
         this._ctrl = controller;
         this.stateFrame = true;
         this.queue = q;
@@ -24,20 +24,20 @@ public class ConsumerTH implements Runnable{
     public synchronized void run() {
         try{
             while(queue.isEmpty() && stateFrame){
-                byte[] frame = queue.take();
+                int[] frame = queue.take();
                 this.handleFrame(frame);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
     }
-    private void handleFrame(byte[] frame){
+    private void handleFrame(int[] frame){
         System.out.print("Consumed : ");
         for (int i=0; i<21 ; i++)
             System.out.print(frame[i] + " ");
         System.out.println();
         ////////////////
-        _ctrl.getModel().get_track().get_thermalTrack().rightOrLeftTH(frame);
-        _ctrl.getModel().applyOnGUI("THE",0, frame);
+        //_ctrl.getModel().get_track().get_thermalTrack().rightOrLeftTH(frame);
+        //_ctrl.getModel().applyOnGUI("THE",0, frame);
     }
 }

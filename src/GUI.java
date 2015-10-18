@@ -81,7 +81,6 @@ public class GUI extends JFrame
                 }else{
                     slider_motor.setEnabled(false);
                 }
-
             }
         });
         sendButton.addActionListener(new ActionListener() {
@@ -89,9 +88,14 @@ public class GUI extends JFrame
             public void actionPerformed(ActionEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
                 //textPane.setText(+);   // set a cmd with
-                setValue_textPanel(textFieldCmd.getText(), "cmd send => ");
+                String cmd = textFieldCmd.getText();
+                setValue_textPanel(cmd, "cmd send => ");
+                byte[] result = cmd.getBytes();
+                for ( int i=0; i<result.length; i++) {
+                    _ctrl.getSerialPort().txByte(result[i]);
+                    //System.out.println(result[i]);
+                }
                 textFieldCmd.setText("");
-
             }
         });
         LIRButton.addActionListener(new ActionListener() {
@@ -99,8 +103,10 @@ public class GUI extends JFrame
             public void actionPerformed(ActionEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
                 setValue_textPanel("#1", "L-IR cmd send => ");
-                _ctrl.getSerialPort().txByte((byte)'#');
-                _ctrl.getSerialPort().txByte((byte)'1');
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
+                //System.out.println((byte)protocol.SENSOR_LIR.SC);
+                //System.out.println((byte)protocol.SENSOR_LIR.ID);
             }
         });
         RIRButton.addActionListener(new ActionListener() {
@@ -108,7 +114,32 @@ public class GUI extends JFrame
             public void actionPerformed(ActionEvent e) {
                 //To change body of implemented methods use File | Settings | File Templates.
                 setValue_textPanel("#2", "R-IR cmd send => ");
-
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_RIR.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_RIR.ID);
+                //System.out.println((byte)protocol.SENSOR_RIR.SC);
+                //System.out.println((byte)protocol.SENSOR_RIR.ID);
+            }
+        });
+        THEButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                setValue_textPanel("#3", "THE cmd send => ");
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.ID);
+                //System.out.println((byte)protocol.SENSOR_THERMAL.SC);
+                //System.out.println((byte)protocol.SENSOR_THERMAL.ID);
+            }
+        });
+        MOTButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
+                setValue_textPanel("#4", "MOT cmd send => ");
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.ID);
+                //System.out.println((byte)protocol.SENSOR_MOTOR_GET.SC);
+                //System.out.println((byte)protocol.SENSOR_MOTOR_GET.ID);
             }
         });
     }

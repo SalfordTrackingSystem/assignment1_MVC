@@ -11,11 +11,11 @@ import java.util.concurrent.BlockingQueue;
 
 public class ConsumerIR implements Runnable{
 
-    private BlockingQueue<byte[]> queue;
+    private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
 
-    public ConsumerIR(BlockingQueue<byte[]> q, Controller controller){
+    public ConsumerIR(BlockingQueue<int[]> q, Controller controller){
         this._ctrl = controller;
         this.stateFrame = true;
         this.queue = q;
@@ -24,7 +24,7 @@ public class ConsumerIR implements Runnable{
     public synchronized void run() {
         try{
             while(queue.isEmpty() && stateFrame){
-                byte[] frame = queue.take();
+                int[] frame = queue.take();
                 this.handleFrame(frame);
             }
         } catch(InterruptedException e) {
@@ -38,7 +38,7 @@ public class ConsumerIR implements Runnable{
      * @param data
      * @return
      */
-    private String handleFrame(byte[] data){
+    private String handleFrame(int[] data){
         int distanceL=0, distanceR =0;
         String cmd;
 
@@ -52,14 +52,14 @@ public class ConsumerIR implements Runnable{
             distanceL = (int)data[2];
             distanceL <<= 8;
             distanceL |= data[3];
-            _ctrl.getModel().applyOnGUI("LIR", distanceL, data);
+            //_ctrl.getModel().applyOnGUI("LIR", distanceL, data);
         }
         else if (data[1] == frame.SENSOR_RIR.ID)    //Stock distanceR and send it to GUI
         {
             distanceR = (int)data[2];
             distanceR<<= 8;
             distanceR |= data[3];
-            _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
+            //_ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
 

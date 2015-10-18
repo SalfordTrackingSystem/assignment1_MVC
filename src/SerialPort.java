@@ -155,7 +155,7 @@ public class SerialPort implements SerialPortEventListener
                 {
                     rxData[cnt] = data[i];
                     System.out.print(rxData[i] + " ");
-                    if(++cnt == 21)
+                    if(++cnt == data.length)
                         cnt = 0;
                 }
                 System.out.println();
@@ -229,7 +229,7 @@ public class SerialPort implements SerialPortEventListener
             System.err.println("SerialPort::sendByte error : " + e.toString());
         }
     }
-
+    /*
     public void rxByte()
     {
         try
@@ -252,7 +252,7 @@ public class SerialPort implements SerialPortEventListener
         {
             System.err.println(e.toString());
         }
-    }
+    } */
 
    /**
     * Method     : Delay::delayMs()
@@ -299,7 +299,7 @@ public class SerialPort implements SerialPortEventListener
     public InputStream get_input(){
         return input;
     }
-
+    /* Have to be upgraded
     public void requestData(byte sensor)
     {
         this.sensor = sensor;
@@ -308,7 +308,7 @@ public class SerialPort implements SerialPortEventListener
         {
             txByte(claimData[i]);
         }
-    }
+    }*/
 
     public void requestData(byte[] sensor)
     {

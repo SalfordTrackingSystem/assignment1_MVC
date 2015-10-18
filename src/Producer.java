@@ -12,11 +12,11 @@ import java.util.concurrent.BlockingQueue;
 
 public class Producer implements Runnable {
 
-    private BlockingQueue<byte[]> queue;
+    private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
 
-    public Producer(BlockingQueue<byte[]> q, Controller controller){
+    public Producer(BlockingQueue<int[]> q, Controller controller){
         System.out.println("Producer created");
         this._ctrl = controller;
         this.stateFrame = true;
@@ -24,20 +24,67 @@ public class Producer implements Runnable {
     }
     @Override
     public synchronized void run() {
-        byte[] frame;
+        int[] frame;
         try {
             while(stateFrame){
-                //frame = _ctrl.getModel().simulation_frame_color();
-                frame = _ctrl.getSerialPort().rxData();
-                queue.put(frame);
+                frame = _ctrl.getModel().simulation_frame_color();
+                //frame = _ctrl.getSerialPort().rxData();
+                if (handleFrame(frame)){
+                    frame = takeGoodFrame(frame);
+                    queue.put(frame);
+                }
                 _ctrl.getSerialPort().resetRxData();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-
+    public Boolean handleFrame(int[] f){  // return ack, nack, frameValidOrNot
+        Boolean flag_ack = false;
+        Boolean flag_nack = false;
+        Boolean flag_return = false;
+        Boolean flag_cmd = false;
+        int debutFrame = 4000;
+        for(int i=0; i<f.length ; i++)
+            if(f[i]==protocol.SENSOR_LIR.SC){ // Looking for the start byte => #
+                debutFrame = i;
+                break;
+            }
+        if(debutFrame != 4000){
+            if(f[debutFrame+1] == protocol.SENSOR_LIR.ACK){
+                flag_ack = true;
+            }else if(f[debutFrame+1] == protocol.SENSOR_LIR.NACK){
+                flag_nack = true;
+            }else{
+                System.out.println("cmd non valid");
+                flag_cmd = true;
+            }
+        }
+        if(flag_cmd || flag_nack){
+            return false;
+        }else if (flag_ack){
+            for(int j = (debutFrame+2) ; j < f.length ; j++){
+                if(f[j]==frame.SENSOR_LIR.SB && f[j+20]==frame.SENSOR_LIR.EB){ // Looking for the start frame byte => $
+                    flag_return = true;
+                    break;
+                }
+            }
+        }
+        return flag_return;
+    }
+    public int[] takeGoodFrame(int[] f){
+        int[] goodFrame = new int[21];
+        for(int i=0 ; i<f.length ; i++){
+            if(f[i] == frame.SENSOR_LIR.SB){
+                for(int j=i; j<i+21 ; j++){
+                    //System.out.print(j+" ");
+                    goodFrame[j-i] = f[j];
+                }
+                break;
+            }
+        }
+        return goodFrame;
+    }
     public Boolean getStateFrame(){
         return this.stateFrame;
     }

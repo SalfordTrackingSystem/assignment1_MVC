@@ -15,10 +15,10 @@ public class Controller {
 
     private Model _model;
     private GUI _view;
-    private  BlockingQueue<byte[]> queue;
-    private  BlockingQueue<byte[]> qIR;
-    private  BlockingQueue<byte[]> qTH;
-    private  BlockingQueue<byte[]> qMO;
+    private  BlockingQueue<int[]> queue;
+    private  BlockingQueue<int[]> qIR;
+    private  BlockingQueue<int[]> qTH;
+    private  BlockingQueue<int[]> qMO;
     private Producer producer;
     private Consumer consumer;
     private ConsumerIR consumerIR;
@@ -165,16 +165,16 @@ public class Controller {
     public SerialPort getSerialPort(){
         return _model.getSerialPort();
     }
-    public BlockingQueue<byte[]> getQueue(){
+    public BlockingQueue<int[]> getQueue(){
         return this.queue;
     }
-    public BlockingQueue<byte[]> getQIR(){
+    public BlockingQueue<int[]> getQIR(){
         return this.qIR;
     }
-    public BlockingQueue<byte[]> getQTH(){
+    public BlockingQueue<int[]> getQTH(){
         return this.qTH;
     }
-    public BlockingQueue<byte[]> getQMO(){
+    public BlockingQueue<int[]> getQMO(){
         return this.qMO;
     }
     public Thread getP_thread(){
