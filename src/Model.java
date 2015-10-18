@@ -34,6 +34,7 @@ public class Model {
      **/
     public Model(Controller controller){
         this._ctrl = controller;
+        this._track = new Tracking(_ctrl);
         _sp = new SerialPort(_ctrl);
         _sp.initialize();
         long time = System.currentTimeMillis();
@@ -305,6 +306,16 @@ public class Model {
         } */
     }
 
+    public void cmdToSend(String cmd){
+        byte cmdMotor = 0;
+        if (cmd == "right"){
+            cmdMotor = 5;
+        }
+        else if (cmd == "left"){
+            cmdMotor =6;
+        }
+        _sp.txByte(cmdMotor);
+    }
 
 
  //Acceseurs
@@ -317,6 +328,11 @@ public class Model {
         return _sp;
     }
 
+    /**
+     * get_track()
+     * return _track
+     * @return _track
+     */
     public Tracking get_track(){
         return _track;
 

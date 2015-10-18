@@ -14,6 +14,8 @@ public class ConsumerIR implements Runnable{
     private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
+    private int distanceL;
+    private int distanceR;
 
     public ConsumerIR(BlockingQueue<int[]> q, Controller controller){
         this._ctrl = controller;
@@ -62,7 +64,8 @@ public class ConsumerIR implements Runnable{
             //_ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
-
-        return cmd;
+        if (cmd=="right"||cmd=="left"){
+            _ctrl.getModel().cmdToSend(cmd);
+        }
     }
 }
