@@ -17,4 +17,8 @@ public class MotorTrack {
         this._ctrl=controller;
     }
 
+    public void addArrayMOT(int[] frame){
+        ;
+    }
+
 }

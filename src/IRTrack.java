@@ -8,7 +8,10 @@
 public class IRTrack {
 
     //Attributes
-    private int distanceR,distanceL,marge;
+    private int marge;
+    private int[] distanceL = new int[10];
+    private int[] distanceR = new int[10];
+    private int i =0 ; //Compteur
 
     private Controller _ctrl;
 
@@ -49,5 +52,29 @@ public class IRTrack {
         }
 
         return side;
+    }
+
+    /**
+     *  addArrayIR()
+     * Permet de stocker 10 mesures du capteur thermique pour pouvoir les traiter
+     * @param distanceL
+     * @param distanceR
+     */
+    public void addArrayIR(int distanceL, int distanceR){
+        this.distanceL[i] = distanceL;
+        this.distanceR[i] = distanceR;
+        if (i > 10){
+
+            i =0; // Remise à zéro du compteur quand le tableau est rempli
+        }
+        i++;
+    }
+
+    public int[] getArrayLIR(){
+        return distanceL;
+    }
+
+    public int[] getArrayRIR(){
+        return distanceR;
     }
 }

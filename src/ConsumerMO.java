@@ -26,6 +26,7 @@ public class ConsumerMO implements Runnable{
             while(queue.isEmpty() && stateFrame){
                 int[] frame = queue.take();
                 this.handleFrame(frame);
+                _ctrl.getModel().getTracking().get_motorTrack().addArrayMOT(frame);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();

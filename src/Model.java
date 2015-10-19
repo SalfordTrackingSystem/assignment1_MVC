@@ -339,15 +339,30 @@ public int[] signedToUnsignedArray(byte[] f){
      * @param data
      * @return
      */
-    public int getMean (int[] data){
-        int mean = 0;
+    public int getMean (int[][] data){
+        int mean;
         int sum = 0;
         for (int i = 0; i< data.length; i++){
-            sum += data[i];
+            for(int j = 0; j<data.length; j++){
+                sum += data[i][j];
+            }
         }
         mean = sum/data.length;
         return mean;
     }
+
+    public int getMean (int[] data){
+        int mean;
+        int sum = 0;
+        for (int i = 0; i< data.length; i++){
+
+            sum += data[i];
+
+        }
+        mean = sum/data.length;
+        return mean;
+    }
+
 
     /**
      * getSDV()
@@ -356,6 +371,18 @@ public int[] signedToUnsignedArray(byte[] f){
      * @param m
      * @return
      */
+    public double getSDV (int[][] data,int m){
+        double SDV;
+        double X = 0;
+        for(int i = 0; i<data.length; i++){
+            for(int j = 0; j<data.length; j++){
+                X += (data[i][j] - m)*(data[i][j]-m);
+            }
+        }
+        SDV = Math.sqrt(X /data.length);
+        return SDV;
+    }
+
     public double getSDV (int[] data,int m){
         double SDV;
         double X = 0;
@@ -381,7 +408,7 @@ public int[] signedToUnsignedArray(byte[] f){
      * return _track
      * @return _track
      */
-    public Tracking get_track(){
+    public Tracking getTracking(){
         return _track;
 
     }

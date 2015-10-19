@@ -14,8 +14,8 @@ public class ConsumerIR implements Runnable{
     private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
-    private int distanceL;
-    private int distanceR;
+    private int distanceL = 0;
+    private int distanceR = 0;
 
     public ConsumerIR(BlockingQueue<int[]> q, Controller controller){
         this._ctrl = controller;
@@ -39,7 +39,6 @@ public class ConsumerIR implements Runnable{
      * @param data
      */
     private void handleFrame(int[] data){
-        int distanceL=0, distanceR =0;
         String cmd;
 
         System.out.print("Consumed : ");
@@ -57,7 +56,7 @@ public class ConsumerIR implements Runnable{
         else if (data[1] == frame.SENSOR_RIR.ID)    //Stock distanceR and send it to GUI
         {
             distanceR = (int)data[2];
-            distanceR<<= 8;
+            distanceR <<= 8;
             distanceR |= data[3];
             _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
@@ -67,5 +66,6 @@ public class ConsumerIR implements Runnable{
             _ctrl.getModel().cmdToSend(cmd);
         }
        */
+        _ctrl.getModel().getTracking().get_irTrack().addArrayIR(distanceL,distanceR);      //Stock les distance dans un tableau
     }
 }

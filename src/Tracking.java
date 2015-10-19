@@ -32,17 +32,40 @@ public class Tracking {
 
 
     /**
-     * fusion
+     * SensorFusion
      * Decide de la commande moteur en fonction de la fiabilité des capteur
-     * @param side
      */
+      public void sensorFusion (String sideTH, String sideIR){
+        int moyenneLIR,moyenneRIR;
+        double SDVLIR,SDVRIR;
+        int[][] arrayTH;
+        int colTH[] = new int[10];
+        int moyTH[] = new int[16];
+        double SDVTH[] = new double[16];
 
-    public String senorFusion(String flag, String side){
+          moyenneLIR = _ctrl.getModel().getMean(_irTrack.getArrayLIR());
+          moyenneRIR = _ctrl.getModel().getMean(_irTrack.getArrayRIR());
+          arrayTH = _thermalTrack.getArrayTH();
 
+          for(int i=0; i<=15;i++) {                        //Calcul la moyenne et SDV de chaque colonne du tableau arrayTH (chaque pixel)
+              for (int j=0; i<=9; j++){
+                colTH[j] =   arrayTH[i][j];
+              }
+              moyTH[i] = _ctrl.getModel().getMean(colTH);
+              SDVTH[i] = _ctrl.getModel().getSDV(colTH,moyTH[i]);
+          }
+          SDVLIR = _ctrl.getModel().getSDV(_irTrack.getArrayLIR(),moyenneLIR);
+          SDVRIR = _ctrl.getModel().getSDV(_irTrack.getArrayRIR(),moyenneRIR);
 
+         /* if(SDVLIR < SDVTH && SDVRIR < SDVTH){
+             _ctrl.getModel().cmdToSend(sideTH);
+          }
+          else {
+              _ctrl.getModel().cmdToSend(sideIR);
+          }
+            */
+      }
 
-        return side;
-    }
 
     /**
      * kalman_init

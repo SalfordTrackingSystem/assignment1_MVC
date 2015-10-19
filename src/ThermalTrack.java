@@ -1,5 +1,4 @@
 
-
 /**
  * Created with IntelliJ IDEA.
  * User: v.gaubert
@@ -10,6 +9,8 @@
 public class ThermalTrack {
 
     //Attributes
+    private int[][] THdata = new int[10][16];
+    int i = 0; // compteur
     private Controller _ctrl;
 
     //Constructor
@@ -56,5 +57,22 @@ public class ThermalTrack {
             side = "right";
         }
         return side;
+    }
+
+    /**
+     * addArrayTH()
+     * Permet de stocker 10 mesures du capteur thermique pour pouvoir les traiter
+     * @param frame
+     */
+    public void addArrayTH(int[] frame){
+        THdata[i] = frame;
+        if (i>9){
+            i=0; //réinitialise le compteur
+        }
+        i++;
+    }
+
+    public int[][] getArrayTH(){
+        return THdata;
     }
 }
