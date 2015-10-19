@@ -11,11 +11,11 @@ import java.util.concurrent.BlockingQueue;
 
 public class ConsumerMO implements Runnable{
 
-    private BlockingQueue<byte[]> queue;
+    private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
 
-    public ConsumerMO(BlockingQueue<byte[]> q, Controller controller){
+    public ConsumerMO(BlockingQueue<int[]> q, Controller controller){
         this._ctrl = controller;
         this.stateFrame = true;
         this.queue = q;
@@ -24,14 +24,14 @@ public class ConsumerMO implements Runnable{
     public synchronized void run() {
         try{
             while(queue.isEmpty() && stateFrame){
-                byte[] frame = queue.take();
+                int[] frame = queue.take();
                 this.handleFrame(frame);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
     }
-    private void handleFrame(byte[] frame){
+    private void handleFrame(int[] frame){
         System.out.print("Consumed : ");
         for (int i=0; i<21 ; i++)
             System.out.print(frame[i] + " ");

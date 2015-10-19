@@ -121,7 +121,7 @@ public class Model {
      * Returns    : Boolean => to validated the frame or not
      * Notes      : Analyse the CRC and compare it to the CRC calculate by the µC
      **/
-    private boolean checkCRC(byte[] data, byte crcReceive){
+    private boolean checkCRC(int[] data, int crcReceive){
         //CRC
         //P(x)=x^8+x^5+x^4+1 = 100110001
         int POLYNOMIAL = 31;
@@ -155,10 +155,10 @@ public class Model {
      * Returns    : Nothing.
      * Notes      : Perform analysis of the frame and validate it or not
      **/
-    public void checkData(byte[] data){
+    public void checkData(int[] data){
         String flag = "";
         if (data[0] == frame.SENSOR_THERMAL.SB){ //|| data[0] == frame.SENSOR_LIR.SB || data[0] == frame.SENSOR_RIR.SB || data[0] == frame.SENSOR_MOTOR.SB){
-            byte[] data_only = new byte[16];
+            int[] data_only = new int[16];
             for(int i=2; i < data.length-3; i++){
                 data_only[i-2]=data[i];
             }
@@ -183,13 +183,7 @@ public class Model {
         else                                                    System.out.println("SB is not valid");
     }
 
-    /**
-     * switchQueue()
-     * Put in the right Queue the data function of the flag
-     * @param flag
-     * @param data
-     */
-    public void switchQueue(String flag, byte[] data){
+    public void switchQueue(String flag, int[] data){
         switch (flag){
             case "LIR":  // data on the first
                 try {
@@ -230,7 +224,7 @@ public class Model {
      * Returns    : Nothing
      * Notes      : Used to display information into the GUI
      **/
-    public void applyOnGUI(String flag, int dist, byte[] data) {
+    public void applyOnGUI(String flag, int dist, int[] data) {
 
         int color = 0;
         int position = 0;
@@ -275,15 +269,29 @@ public class Model {
     public byte[] simulation_frame_color(){
         Random rd = new Random();
         byte i = (byte) (rd.nextInt(100)+1);
-        byte[] frame = {36, 3, i, i, i, i, i, (byte) 255, (byte) 255, i, i, (byte) 255, (byte) 255, i, i, i, i, i, 124, 0, 37};
+        byte[] frameSigned = {(byte)'#',(byte)'A',36, 3, i, i, i, i, i, (byte) 255, (byte) 255, i, i, (byte) 255, (byte) 255, i, i, i, i, i, 124, 0, 37};
+        //int[] frame = new int[frameSigned.length];
+
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         //System.out.println(frame[0]);
-        return frame;
+        /*
+        for(int j=0;j<frameSigned.length;j++){
+            frame[j] = (frameSigned[j] & 0xFF);
+        } */
+        return (frameSigned);
     }
+
+public int[] signedToUnsignedArray(byte[] f){
+    int[] unsignedArray = new int[f.length];
+    for(int j=0;j<f.length;j++){
+        unsignedArray[j] = (f[j] & 0xFF);
+    }
+    return unsignedArray;
+}
     /**
      * Method     : changedColor()
      * Parameters : JPanel[][] tablePanel (image panel), JPanel imagePanel(image), byte[] frame(sensor frame)
@@ -315,6 +323,7 @@ public class Model {
         else if (cmd == "left"){
             cmdMotor =6;
         }
+        _sp.txByte((byte)'#');
         _sp.txByte(cmdMotor);
     }
 

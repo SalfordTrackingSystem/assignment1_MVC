@@ -11,14 +11,13 @@ import java.util.concurrent.BlockingQueue;
 
 public class ConsumerIR implements Runnable{
 
-    private BlockingQueue<byte[]> queue;
+    private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
     private int distanceL;
     private int distanceR;
 
-
-    public ConsumerIR(BlockingQueue<byte[]> q, Controller controller){
+    public ConsumerIR(BlockingQueue<int[]> q, Controller controller){
         this._ctrl = controller;
         this.stateFrame = true;
         this.queue = q;
@@ -27,7 +26,7 @@ public class ConsumerIR implements Runnable{
     public synchronized void run() {
         try{
             while(queue.isEmpty() && stateFrame){
-                byte[] frame = queue.take();
+                int[] frame = queue.take();
                 this.handleFrame(frame);
             }
         } catch(InterruptedException e) {
@@ -36,13 +35,11 @@ public class ConsumerIR implements Runnable{
     }
 
     /**
-     * handleframe
-     * Permet de renvoyer la commande en fonction des donnée des capteur IR
+     *
      * @param data
-     * @return
      */
-    private void handleFrame(byte[] data){
-
+    private void handleFrame(int[] data){
+        int distanceL=0, distanceR =0;
         String cmd;
 
         System.out.print("Consumed : ");
@@ -64,9 +61,11 @@ public class ConsumerIR implements Runnable{
             distanceR |= data[3];
             _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
+        /*
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
         if (cmd=="right"||cmd=="left"){
             _ctrl.getModel().cmdToSend(cmd);
         }
+       */
     }
 }
