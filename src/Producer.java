@@ -28,14 +28,14 @@ public class Producer implements Runnable {
         int[] frameUnsigned;
         try {
             while(stateFrame){
-                //frameSigned = _ctrl.getModel().simulation_frame_color();
-                frameSigned = _ctrl.getSerialPort().rxData();
+                frameSigned = _ctrl.getModel().simulation_frame_color();
+                //frameSigned = _ctrl.getSerialPort().rxData();
                 frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned);
                 if (handleFrame(frameUnsigned)){
                     frameUnsigned = takeGoodFrame(frameUnsigned);
                     queue.put(frameUnsigned);
                 }
-                _ctrl.getSerialPort().resetRxData();
+                //_ctrl.getSerialPort().resetRxData();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

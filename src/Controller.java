@@ -33,9 +33,8 @@ public class Controller {
 
     public Controller(){
         _view = new GUI(this);
-        this.start();
         _model = new Model(this);
-
+        this.start();
     }
     public void start(){
         _view.visible(true);

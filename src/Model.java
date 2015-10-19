@@ -21,10 +21,6 @@ public class Model {
     private Controller _ctrl;
     private SerialPort _sp;
     private Tracking _track;
-    //private BlockingQueue<byte[]> qIR;
-    //private BlockingQueue<byte[]> qTH;
-    //private BlockingQueue<byte[]> qMO;
-
 
     /**
      * Method     : Constructor of Model class
