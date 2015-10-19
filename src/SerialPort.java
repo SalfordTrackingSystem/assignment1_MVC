@@ -20,12 +20,13 @@ import java.util.Enumeration;
 public class SerialPort implements SerialPortEventListener
 {
 	private byte data[] = null;
-    private byte rxData[] = new byte[21];
+    private byte rxData[] = new byte[128];
     private byte ack[] = {35, 65};   // #A
     private byte nac[] = {35, 78};   // #N
     private boolean cmdOK = false;
     private boolean cmdNOK = false;
     private byte sensor = 0;
+    private final int frameLength = 23;
 
     //private byte[] frameTest = {36, 50, 51, 52, 52, 53, 54, 55, 56, 57, 58, 59, 60, 0, 0, 0, 0, 0, 0, 0, 37};
     //private byte dataSerial[] = new byte[21];
@@ -154,10 +155,11 @@ public class SerialPort implements SerialPortEventListener
                 for(byte i=0 ; i<data.length ; i++)
                 {
                     rxData[cnt] = data[i];
-                    System.out.print(rxData[i] + " ");
-                    if(++cnt == data.length)
+                    //System.out.print(rxData[i] + " ");
+                    if(++cnt == frameLength)
                         cnt = 0;
                 }
+
                 System.out.println();
 
                  /*
@@ -321,7 +323,7 @@ public class SerialPort implements SerialPortEventListener
     public void resetRxData()
     {
         cnt = 0;
-        for(int i=0; i<21; i++)
+        for(int i=0; i < frameLength; i++)
         {
             rxData[i] = 0;
         }

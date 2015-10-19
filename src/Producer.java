@@ -29,6 +29,16 @@ public class Producer implements Runnable {
         try {
             while(stateFrame){
                 //frameSigned = _ctrl.getModel().simulation_frame_color();
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.ID);
+                try
+                {
+                    Thread.sleep(10);
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Exception<Delay>: " + e);
+                };
                 frameSigned = _ctrl.getSerialPort().rxData();
                 frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned);
                 if (handleFrame(frameUnsigned)){

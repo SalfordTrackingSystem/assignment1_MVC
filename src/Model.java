@@ -170,7 +170,7 @@ public class Model {
                 else                                            System.out.println("ID is not valid");
             }
             else                                                System.out.println("CRC is not valid");
-            if (flag != ""){
+            if (!flag.equals("")){
                 if (data[data.length-1] == frame.SENSOR_LIR.EB){  // if it's true, frame is validated
                     System.out.println("Frame validated => |SB|ID|CRC|CN|EB|");
                     System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
