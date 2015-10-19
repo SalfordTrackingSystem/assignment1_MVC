@@ -323,6 +323,7 @@ public int[] signedToUnsignedArray(byte[] f){
         else if (cmd == "left"){
             cmdMotor =6;
         }
+        _sp.txByte((byte)'#');
         _sp.txByte(cmdMotor);
     }
 

@@ -61,9 +61,11 @@ public class ConsumerIR implements Runnable{
             distanceR |= data[3];
             _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
+        /*
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
         if (cmd=="right"||cmd=="left"){
             _ctrl.getModel().cmdToSend(cmd);
         }
+       */
     }
 }
