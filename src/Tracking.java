@@ -33,13 +33,13 @@ public class Tracking {
 
     /**
      * fusion
-     * Decide de la commande moteur
-     * @param data
+     * Decide de la commande moteur en fonction de la fiabilité des capteur
+     * @param side
      */
 
-    public String fusion(byte[] data, int distance){
-        String side = "";
-        int dist= distance;
+    public String senorFusion(String flag, String side){
+
+
 
         return side;
     }
