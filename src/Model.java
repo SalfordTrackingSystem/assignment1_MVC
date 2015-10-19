@@ -36,11 +36,58 @@ public class Model {
         long time = System.currentTimeMillis();
         long actualTime = 0;
         long timeout = 0;
+    }
+
+    public void cmd(String flag){
+        switch (flag){
+            case "LIR":  // data on the first
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
+                break;
+            case "RIR":
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_RIR.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_RIR.ID);
+                break;
+            case "THE":
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.ID);
+                break;
+            case "MOT":
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.ID);
+                break;
+            default:
+                System.out.println("Invalid CMD");
+                break;
+        }
+
+    }
+    public void sendCmd(int i){
+        if (i==1)cmd(frame.SENSOR_LIR.NAME);
+        if (i==2)cmd(frame.SENSOR_RIR.NAME);
+        if (i==3)cmd(frame.SENSOR_THERMAL.NAME);
+        if (i==4)cmd(frame.SENSOR_MOTOR.NAME);
+    }
+    public byte[] getSensors_simulation(int i){
+        byte[] comand = new byte[21];
+        if (i==1){
+           comand=simulation_frame_LIR();
+        }
+        if (i==2){
+            comand=simulation_frame_RIR();
+        }
+        if (i==3){
+            comand=simulation_frame_THE();
+        }
+        if (i==4){
+            comand=simulation_frame_MOT();
+        }
+        return comand;
+    }
 
         // claim data every 50ms
-        /* Pilou function
-        while (true)
-        {
+        // Pilou function
+           /*
             if(timeout >= 50) //50ms
             {
                 _ctrl.getSerialPort().requestData((byte)1);
@@ -53,8 +100,8 @@ public class Model {
                 actualTime = System.currentTimeMillis();
                 timeout = actualTime - time;
             }
-        }
-        */
+          */
+
         //byte data[] = _sp.;
         //while(true){
             // View frame
@@ -73,7 +120,7 @@ public class Model {
             _ctrl.getGUI().setImage(_sp.rxData());
             */
         //}
-    }
+
     /**
      * Method     : simulation()
      * Parameters : Waiting time in milliseconds
@@ -96,20 +143,75 @@ public class Model {
      * Returns    : 8 or 16 bits frame with |SB|ID|CRC|CN|EB|
      * Notes      : Used to simulate frame each second
      **/
-    public byte[] simulation_frame(){
+    public byte[] simulation_frame_RIR(){
         Random rd = new Random();
         //byte i = 1;
-        byte i =(byte)(rd.nextInt(5)+1);
+        byte i =(byte)(rd.nextInt(254)+1);
+        byte j =(byte)(rd.nextInt(4));
+        byte[] frameSigned = {(byte)'#',(byte)'A',36, 1, j, i, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 37};
         //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
-        byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits
+        //byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         //System.out.println(frame[0]);
-        return frame;
+        return frameSigned;
+    }
+    public byte[] simulation_frame_LIR(){
+        Random rd = new Random();
+        byte i =(byte)(rd.nextInt(254)+1);
+        byte j =(byte)(rd.nextInt(4));
+        byte[] frameSigned = {(byte)'#',(byte)'A',36, 2, j, i, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 37};
+        //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
+        //byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        //System.out.println(frame[0]);
+        return frameSigned;
+    }
+    public byte[] simulation_frame_THE(){
+        Random rd = new Random();
+        byte i = (byte) (rd.nextInt(100)+1);
+        byte[] frameSigned = {(byte)'#',(byte)'A',36, 3, (byte) 255, i, i, i, i, (byte) 255, (byte) 255, i, i, (byte) 255, (byte) 255, i, i, i, i, i, 124, 0, 37};
+
+        //byte[] frameSigned = {(byte)'#',(byte)'A',36, 3, (byte)255, 0, 0, 0, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, (byte)125, 100, 124, 0, 37};
+        //int[] frame = new int[frameSigned.length];
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        //System.out.println(frame[0]);
+        /*
+        for(int j=0;j<frameSigned.length;j++){
+            frame[j] = (frameSigned[j] & 0xFF);
+        } */
+        return (frameSigned);
+    }
+    public byte[] simulation_frame_MOT(){
+        Random rd = new Random();
+        //byte i = 1;
+        byte i =(byte)(rd.nextInt(1400)+1);
+        if(i<1100) i = (byte) 1100;
+        byte[] frameSigned = {(byte)'#',(byte)'A',36, 4, i, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 37};
+        //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
+        //byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        //System.out.println(frame[0]);
+        return frameSigned;
     }
     /**
      * Method     : checkCRC()
@@ -236,8 +338,10 @@ public class Model {
             case "THE":
                 for(int i=0 ; i<4 ; i++)
                     for(int j=0 ; j<4 ; j++){
-                        if (data[17-i*4-j] > 255 || data[17-i*4-j]<0) color=128;
-                        else color = data[17-i*4-j];
+                        if (data[17-i*4-j] > 255 || data[17-i*4-j]<0)
+                            color=128;
+                        else
+                            color = 255 - data[17-i*4-j];
                         //System.out.println(color);
                         this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(color, 0, 0));
                         this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
@@ -246,9 +350,9 @@ public class Model {
             case "MOT":
                 //System.out.println("MOT do nothing");
                 // !! Not really implemented at this time, need more information on the motor returned value
-                position = data[2];
-                _ctrl.getGUI().setValue_motor(position);
-                _ctrl.getGUI().setValue_textPanel(Integer.toString(position), "> MOTOR_setTo : ");
+                //position = data[2];
+                _ctrl.getGUI().setValue_motor(dist);
+                _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> MOTOR_setTo : ");
                 break;
             default:
                 System.out.println("Invalid NAME");
@@ -257,37 +361,15 @@ public class Model {
     }
 
 
-    /**
-     * Method     : simulation_frame_color()
-     * Returns    : 16 bits frame with |SB|ID|CRC|CN|EB|
-     * Notes      : Used to simulate thermal frame each second
-     **/
-    public byte[] simulation_frame_color(){
-        Random rd = new Random();
-        byte i = (byte) (rd.nextInt(100)+1);
-        byte[] frameSigned = {(byte)'#',(byte)'A',36, 3, i, i, i, i, i, (byte) 255, (byte) 255, i, i, (byte) 255, (byte) 255, i, i, i, i, i, 124, 0, 37};
-        //int[] frame = new int[frameSigned.length];
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+    public int[] signedToUnsignedArray(byte[] f){
+        int[] unsignedArray = new int[f.length];
+        for(int j=0;j<f.length;j++){
+            unsignedArray[j] = (f[j] & 0xFF);
         }
-        //System.out.println(frame[0]);
-        /*
-        for(int j=0;j<frameSigned.length;j++){
-            frame[j] = (frameSigned[j] & 0xFF);
-        } */
-        return (frameSigned);
+        return unsignedArray;
     }
-
-public int[] signedToUnsignedArray(byte[] f){
-    int[] unsignedArray = new int[f.length];
-    for(int j=0;j<f.length;j++){
-        unsignedArray[j] = (f[j] & 0xFF);
-    }
-    return unsignedArray;
-}
     /**
      * Method     : changedColor()
      * Parameters : JPanel[][] tablePanel (image panel), JPanel imagePanel(image), byte[] frame(sensor frame)
@@ -303,6 +385,7 @@ public int[] signedToUnsignedArray(byte[] f){
                     val=255;
                 this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(val, 0, 0));
                 this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
+
             }
         /*try {
             Thread.sleep(1000);
@@ -310,7 +393,7 @@ public int[] signedToUnsignedArray(byte[] f){
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } */
     }
-
+             /*
     public void cmdToSend(String cmd){
         byte cmdMotor = 0;
         if (cmd == "right"){
@@ -322,7 +405,7 @@ public int[] signedToUnsignedArray(byte[] f){
         _sp.txByte((byte)'#');
         _sp.txByte(cmdMotor);
     }
-
+            */
 
  //Acceseurs
     /**

@@ -15,12 +15,17 @@ public class Producer implements Runnable {
     private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
+    private int interCmd;
+    private int interCmdFalse;
 
     public Producer(BlockingQueue<int[]> q, Controller controller){
         System.out.println("Producer created");
         this._ctrl = controller;
         this.stateFrame = true;
         this.queue = q;
+        interCmd = 1;
+        interCmdFalse = 1;
+
     }
     @Override
     public synchronized void run() {
@@ -28,14 +33,31 @@ public class Producer implements Runnable {
         int[] frameUnsigned;
         try {
             while(stateFrame){
-                //frameSigned = _ctrl.getModel().simulation_frame_color();
-                frameSigned = _ctrl.getSerialPort().rxData();
+                /*** Real test ***/
+                //_ctrl.getModel().sendCmd(interCmd);
+                //frameSigned = _ctrl.getSerialPort().rxData();
+                /****/
+                /*** simulation test ***/
+                frameSigned = _ctrl.getModel().getSensors_simulation(interCmd);
+                /****/
+
                 frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned);
                 if (handleFrame(frameUnsigned)){
                     frameUnsigned = takeGoodFrame(frameUnsigned);
                     queue.put(frameUnsigned);
+                    interCmd+=1;
+                    interCmdFalse = 1;
+                    if(interCmd>4) interCmd = 1;
+                }else{
+                    interCmdFalse+=1;
+                    if (interCmdFalse>5){
+                        System.out.println("Problem cmd");
+                        break;
+                    }
                 }
-                _ctrl.getSerialPort().resetRxData();
+                /*** Real test ***/
+                // _ctrl.getSerialPort().resetRxData();
+                /****/
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

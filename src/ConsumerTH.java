@@ -32,7 +32,7 @@ public class ConsumerTH implements Runnable{
         }
     }
     private void handleFrame(int[] frame){
-        System.out.print("Consumed : ");
+        System.out.print("ConsumedTH : ");
         for (int i=0; i<21 ; i++)
             System.out.print(frame[i] + " ");
         System.out.println();

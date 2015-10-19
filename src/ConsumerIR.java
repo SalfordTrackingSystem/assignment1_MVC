@@ -21,6 +21,8 @@ public class ConsumerIR implements Runnable{
         this._ctrl = controller;
         this.stateFrame = true;
         this.queue = q;
+        distanceL = 0;
+        distanceR = 0;
     }
     @Override
     public synchronized void run() {
@@ -39,7 +41,7 @@ public class ConsumerIR implements Runnable{
      * @param data
      */
     private void handleFrame(int[] data){
-        int distanceL=0, distanceR =0;
+
         String cmd;
 
         System.out.print("Consumed : ");
@@ -61,11 +63,15 @@ public class ConsumerIR implements Runnable{
             distanceR |= data[3];
             _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
-        /*
+
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
         if (cmd=="right"||cmd=="left"){
-            _ctrl.getModel().cmdToSend(cmd);
+            if (cmd == "right"){
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_SET.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_SET.ID);
+            }
+            //_ctrl.getModel().cmdToSend(cmd);
         }
-       */
+
     }
 }

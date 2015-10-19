@@ -37,11 +37,11 @@ public class IRTrack {
         }
         else if ((distanceL < 200 || distanceL > 1500) && distanceR > 200 && distanceR< 1500)   //IRleft out of range
         {
-            side = "left";
+            side = "right";
         }
         else if ((distanceR < 200 || distanceR > 1500) && distanceL > 200 && distanceL< 1500)   //IRright out of range
         {
-            side = "right";
+            side = "left";
         }
         else {
             side ="idle";
