@@ -27,7 +27,7 @@ public class ThermalTrack {
         String side = "idle";
         int marge =20;                         //Error of thermal sensor = 0.14° -> 14 in byte
         int cnt=0;
-        int moyenneR=0, moyenneL=0,sumL=0,sumR=0;
+        int moyenneR, moyenneL,sumL=0,sumR=0;
         for(int i=0 ; i<16 ; i++){             // Boucle permettant de faire la somme des valeurs des pixels de gauche
             sumL += THdata[i];
             cnt++;
