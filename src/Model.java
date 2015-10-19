@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.lang.Math.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -315,6 +316,11 @@ public int[] signedToUnsignedArray(byte[] f){
         } */
     }
 
+    /**
+     * cmdToSend()
+     * Envoie une commande par le serial port
+     * @param cmd
+     */
     public void cmdToSend(String cmd){
         byte cmdMotor = 0;
         if (cmd == "right"){
@@ -327,6 +333,38 @@ public int[] signedToUnsignedArray(byte[] f){
         _sp.txByte(cmdMotor);
     }
 
+    /**
+     * getMean()
+     * Renvoie la moyenne d'un tableau
+     * @param data
+     * @return
+     */
+    public int getMean (int[] data){
+        int mean = 0;
+        int sum = 0;
+        for (int i = 0; i< data.length; i++){
+            sum += data[i];
+        }
+        mean = sum/data.length;
+        return mean;
+    }
+
+    /**
+     * getSDV()
+     * Renvoie l'écart type
+     * @param data
+     * @param m
+     * @return
+     */
+    public double getSDV (int[] data,int m){
+        double SDV;
+        double X = 0;
+        for(int i = 0; i<data.length; i++){
+            X += (data[i] - m)*(data[i]-m);
+        }
+        SDV = Math.sqrt(X /data.length);
+        return SDV;
+    }
 
  //Acceseurs
     /**
