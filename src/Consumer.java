@@ -26,6 +26,7 @@ public class Consumer implements Runnable{
             while(queue.isEmpty() && stateFrame){
                 int[] frame = queue.take();
                 this.handleFrame(frame);
+                //Thread.sleep(300);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();

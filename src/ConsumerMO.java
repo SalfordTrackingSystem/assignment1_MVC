@@ -26,6 +26,7 @@ public class ConsumerMO implements Runnable{
             while(queue.isEmpty() && stateFrame){
                 int[] frame = queue.take();
                 this.handleFrame(frame);
+                Thread.sleep(100);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
@@ -38,7 +39,7 @@ public class ConsumerMO implements Runnable{
         System.out.println();
         ////////////////
         /*float val = frame[2];
-        val = (180f/(2080f-1000f))*(val - 1000f);
-        _ctrl.getModel().applyOnGUI("MOT",(int)val, frame);*/
+        val = (180f/(2080f-1000f))*(val - 1000f);*/
+        _ctrl.getModel().applyOnGUI("MOT",frame[2], frame);
     }
 }

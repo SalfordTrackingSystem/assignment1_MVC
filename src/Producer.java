@@ -34,11 +34,20 @@ public class Producer implements Runnable {
         try {
             while(stateFrame){
                 /*** Real test ***/
-                //_ctrl.getModel().sendCmd(interCmd);
-                //frameSigned = _ctrl.getSerialPort().rxData();
+                _ctrl.getModel().sendCmd(interCmd);
+                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
+                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
+                try{
+                    Thread.sleep(200);
+                }catch(Exception e){
+                    System.out.println("error");
+                }
+                frameSigned = _ctrl.getSerialPort().rxData();
+                //for(int i = 0;i<frameSigned.length;i++)
+                //System.out.print(frameSigned[i]);
                 /****/
                 /*** simulation test ***/
-                frameSigned = _ctrl.getModel().getSensors_simulation(interCmd);
+                //frameSigned = _ctrl.getModel().getSensors_simulation(interCmd);
                 /****/
 
                 frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned);
@@ -51,12 +60,12 @@ public class Producer implements Runnable {
                 }else{
                     interCmdFalse+=1;
                     if (interCmdFalse>5){
-                        System.out.println("Problem cmd");
+                        System.out.println("Problem communication send too much time without answer");
                         break;
                     }
                 }
                 /*** Real test ***/
-                // _ctrl.getSerialPort().resetRxData();
+                 _ctrl.getSerialPort().resetRxData();
                 /****/
             }
         } catch (InterruptedException e) {

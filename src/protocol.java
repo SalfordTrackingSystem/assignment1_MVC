@@ -10,7 +10,8 @@ public enum protocol {
     SENSOR_LIR("LIR",  '#', '2', 'A', 'N'),
     SENSOR_THERMAL("THE",  '#', '3', 'A', 'N'),
     SENSOR_MOTOR_GET("MOTG",  '#', '4', 'A', 'N'),
-    SENSOR_MOTOR_SET("MOTS",  '#', '5', 'A', 'N');
+    SENSOR_MOTOR_LEFT("MOTL",  '#', '5', 'A', 'N'),
+    SENSOR_MOTOR_RIGHT("MOTR",  '#', '6', 'A', 'N');
 
     public String NAME = "";
     public char SC;

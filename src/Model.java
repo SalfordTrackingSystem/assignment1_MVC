@@ -56,6 +56,14 @@ public class Model {
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.SC);
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.ID);
                 break;
+            case "MOTL":
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_LEFT.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_LEFT.ID);
+                break;
+            case "MOTR":
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_RIGHT.SC);
+                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_RIGHT.ID);
+                break;
             default:
                 System.out.println("Invalid CMD");
                 break;
@@ -199,8 +207,8 @@ public class Model {
     public byte[] simulation_frame_MOT(){
         Random rd = new Random();
         //byte i = 1;
-        byte i =(byte)(rd.nextInt(1400)+1);
-        if(i<1100) i = (byte) 1100;
+        byte i =(byte)(rd.nextInt(170)+1);
+        //if(i<1100) i = (byte) 1100;
         byte[] frameSigned = {(byte)'#',(byte)'A',36, 4, i, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 37};
         //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
         //byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits

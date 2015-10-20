@@ -30,6 +30,7 @@ public class ConsumerIR implements Runnable{
             while(queue.isEmpty() && stateFrame){
                 int[] frame = queue.take();
                 this.handleFrame(frame);
+                Thread.sleep(100);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
@@ -44,34 +45,35 @@ public class ConsumerIR implements Runnable{
 
         String cmd;
 
-        System.out.print("Consumed : ");
+        System.out.print("ConsumedIR : ");
         for (int i=0; i<21 ; i++)
             System.out.print(data[i] + " ");
         System.out.println();
 
         if( data[1] == frame.SENSOR_LIR.ID)         //Stock distanceL and send it to GUI
         {
-            distanceL = (int)data[2];
+            distanceL = (int)data[3];
             distanceL <<= 8;
-            distanceL |= data[3];
+            distanceL |= data[2];
             _ctrl.getModel().applyOnGUI("LIR", distanceL, data);
         }
         else if (data[1] == frame.SENSOR_RIR.ID)    //Stock distanceR and send it to GUI
         {
-            distanceR = (int)data[2];
+            distanceR = (int)data[3];
             distanceR<<= 8;
-            distanceR |= data[3];
+            distanceR |= data[2];
             _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
-
+        /*
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
         if (cmd=="right"||cmd=="left"){
             if (cmd == "right"){
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_SET.SC);
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_SET.ID);
+                _ctrl.getModel().cmd("MOTL");
+            }else if (cmd == "left"){
+                _ctrl.getModel().cmd("MOTR");
+            }else{
+                System.out.println("cmd not valid");
             }
-            //_ctrl.getModel().cmdToSend(cmd);
-        }
-
+        } */
     }
 }
