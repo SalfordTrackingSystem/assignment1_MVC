@@ -21,6 +21,10 @@ public class Model {
     private Controller _ctrl;
     private SerialPort _sp;
     private Tracking _track;
+    //private BlockingQueue<byte[]> qIR;
+    //private BlockingQueue<byte[]> qTH;
+    //private BlockingQueue<byte[]> qMO;
+
 
     /**
      * Method     : Constructor of Model class
@@ -94,8 +98,9 @@ public class Model {
     }
 
         // claim data every 50ms
-        // Pilou function
-           /*
+        /* Pilou function
+        while (true)
+        {
             if(timeout >= 50) //50ms
             {
                 _ctrl.getSerialPort().requestData((byte)1);
@@ -108,8 +113,8 @@ public class Model {
                 actualTime = System.currentTimeMillis();
                 timeout = actualTime - time;
             }
-          */
-
+        }
+        */
         //byte data[] = _sp.;
         //while(true){
             // View frame
@@ -128,7 +133,7 @@ public class Model {
             _ctrl.getGUI().setImage(_sp.rxData());
             */
         //}
-
+    //}
     /**
      * Method     : simulation()
      * Parameters : Waiting time in milliseconds
@@ -393,7 +398,6 @@ public class Model {
                     val=255;
                 this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(val, 0, 0));
                 this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
-
             }
         /*try {
             Thread.sleep(1000);
@@ -401,7 +405,7 @@ public class Model {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } */
     }
-             /*
+
     public void cmdToSend(String cmd){
         byte cmdMotor = 0;
         if (cmd == "right"){
@@ -410,10 +414,9 @@ public class Model {
         else if (cmd == "left"){
             cmdMotor =6;
         }
-        _sp.txByte((byte)'#');
         _sp.txByte(cmdMotor);
     }
-            */
+
 
  //Acceseurs
     /**
