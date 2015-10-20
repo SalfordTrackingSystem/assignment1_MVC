@@ -33,7 +33,7 @@ public class Producer implements Runnable {
         int[] frameUnsigned;
         try {
             while(stateFrame){
-                /*** Real test ***/
+                /*** Real test ready***/
                 _ctrl.getModel().sendCmd(interCmd);
                 //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
                 //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
