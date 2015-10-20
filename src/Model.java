@@ -315,6 +315,7 @@ public class Model {
         else if (cmd == "left"){
             cmdMotor =6;
         }
+
         _sp.txByte(cmdMotor);
     }
 
