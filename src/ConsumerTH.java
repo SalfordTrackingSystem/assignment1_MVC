@@ -26,7 +26,7 @@ public class ConsumerTH implements Runnable{
             while(queue.isEmpty() && stateFrame){
                 int[] frame = queue.take();
                 this.handleFrame(frame);
-                _ctrl.getModel().getTracking().get_thermalTrack().addArrayTH(frame);
+                _ctrl.getModel().getTracking().get_thermalTrack().addArrayTH(frame,9);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();

@@ -66,6 +66,6 @@ public class ConsumerIR implements Runnable{
             _ctrl.getModel().cmdToSend(cmd);
         }
        */
-        _ctrl.getModel().getTracking().get_irTrack().addArrayIR(distanceL,distanceR);      //Stock les distance dans un tableau
+        _ctrl.getModel().getTracking().get_irTrack().addArrayIR(distanceL,distanceR,9);      //Stock les distance dans un tableau
     }
 }

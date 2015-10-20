@@ -9,7 +9,7 @@
 public class ThermalTrack {
 
     //Attributes
-    private int[][] THdata = new int[10][16];
+    private int[][] THdata;
     int i = 0; // compteur
     private Controller _ctrl;
 
@@ -29,17 +29,7 @@ public class ThermalTrack {
         int marge =20;                         //Error of thermal sensor = 0.14° -> 14 in byte
         int cnt=0;
         int moyenneR, moyenneL,sumL=0,sumR=0;
-        for(int i=0 ; i<16 ; i++){             // Boucle permettant de faire la somme des valeurs des pixels de gauche
-            sumL += THdata[i];
-            cnt++;
-            if(cnt==2){
-                i +=2;
-                cnt =0;
-            }
-        }
-        moyenneL = sumL/8;
-        cnt =0;
-        for(int i=2 ; i<16 ; i++){            // Boucle permettant de faire la somme des valeurs des pixels de droite
+        for(int i=2 ; i<18 ; i++){             // Boucle permettant de faire la somme des valeurs des pixels de droite
             sumR += THdata[i];
             cnt++;
             if(cnt==2){
@@ -48,6 +38,16 @@ public class ThermalTrack {
             }
         }
         moyenneR = sumR/8;
+        cnt =0;
+        for(int i=4 ; i<18 ; i++){            // Boucle permettant de faire la somme des valeurs des pixels de gauche
+            sumR += THdata[i];
+            cnt++;
+            if(cnt==2){
+                i +=2;
+                cnt =0;
+            }
+        }
+        moyenneL = sumL/8;
 
         //Compare les deux moyennes et en déduire une direction pour commander le moteur
         if (moyenneL>moyenneR + marge){
@@ -64,9 +64,9 @@ public class ThermalTrack {
      * Permet de stocker 10 mesures du capteur thermique pour pouvoir les traiter
      * @param frame
      */
-    public void addArrayTH(int[] frame){
+    public void addArrayTH(int[] frame, int dim){
         THdata[i] = frame;
-        if (i>9){
+        if (i>dim){
             i=0; //réinitialise le compteur
         }
         i++;

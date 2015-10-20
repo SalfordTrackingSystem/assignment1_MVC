@@ -363,6 +363,18 @@ public int[] signedToUnsignedArray(byte[] f){
         return mean;
     }
 
+    public int getMean (double[] data){
+        int mean;
+        int sum = 0;
+        for (int i = 0; i< data.length; i++){
+
+            sum += data[i];
+
+        }
+        mean = sum/data.length;
+        return mean;
+    }
+
 
     /**
      * getSDV()
@@ -384,6 +396,16 @@ public int[] signedToUnsignedArray(byte[] f){
     }
 
     public double getSDV (int[] data,int m){
+        double SDV;
+        double X = 0;
+        for(int i = 0; i<data.length; i++){
+            X += (data[i] - m)*(data[i]-m);
+        }
+        SDV = Math.sqrt(X /data.length);
+        return SDV;
+    }
+
+    public double getSDV (double[] data,int m){
         double SDV;
         double X = 0;
         for(int i = 0; i<data.length; i++){
