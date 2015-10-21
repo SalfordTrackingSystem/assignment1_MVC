@@ -66,24 +66,25 @@ public class ConsumerIR implements Runnable{
         }
 
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
-        if (cmd=="right"||cmd=="left"){
-            if (cmd == "right"){
-                _ctrl.getModel().cmd("MOTL");
-                /*try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                } */
-            }else if (cmd == "left"){
-                _ctrl.getModel().cmd("MOTR");
-                /*try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                } */
-            }else{
-                System.out.println("cmd not valid");
-            }
+        if (cmd == "right"){
+            _ctrl.getProducer().setTrack(6);
+            //_ctrl.getModel().cmd(protocol.SENSOR_MOTOR_RIGHT.NAME);
+            /*try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } */
+        }else if (cmd == "left"){
+            _ctrl.getProducer().setTrack(5);
+            //_ctrl.getModel().cmd(protocol.SENSOR_MOTOR_LEFT.NAME);
+            /*try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } */
+        }else{
+            System.out.println("cmd not valid");
         }
+
     }
 }

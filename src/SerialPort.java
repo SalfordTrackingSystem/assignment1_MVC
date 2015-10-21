@@ -21,11 +21,11 @@ public class SerialPort implements SerialPortEventListener
 {
 	private byte data[] = null;
     private byte rxData[] = new byte[128];
-    private byte ack[] = {35, 65};   // #A
-    private byte nac[] = {35, 78};   // #N
-    private boolean cmdOK = false;
-    private boolean cmdNOK = false;
-    private byte sensor = 0;
+    //private byte ack[] = {35, 65};   // #A
+    //private byte nac[] = {35, 78};   // #N
+    //private boolean cmdOK = false;
+    //private boolean cmdNOK = false;
+    //private byte sensor = 0;
     private final int frameLength = 23;
 
     //private byte[] frameTest = {36, 50, 51, 52, 52, 53, 54, 55, 56, 57, 58, 59, 60, 0, 0, 0, 0, 0, 0, 0, 37};
@@ -39,7 +39,7 @@ public class SerialPort implements SerialPortEventListener
     {
         //"/dev/tty.usbserial-A9007UX1", // Mac OS X
         //"/dev/ttyUSB0",                // Linux
-        "COM9"                         // Windows
+        "COM13"                         // Windows
     };
 
 	private InputStream input;                 // Buffered input stream from the port.
@@ -347,7 +347,7 @@ public class SerialPort implements SerialPortEventListener
         }
     }*/
 
-
+    /*
     public byte[] getAck()
     {
         return ack;
@@ -357,5 +357,5 @@ public class SerialPort implements SerialPortEventListener
     {
         return nac;
     }
-
+    */
 }
