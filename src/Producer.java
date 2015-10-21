@@ -35,8 +35,8 @@ public class Producer implements Runnable {
             while(stateFrame){
                 /*** Real test ready***/
                 _ctrl.getModel().sendCmd(interCmd);
-                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
-                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
+                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_RIGHT.SC);
+                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_RIGHT.ID);
                 try{
                     Thread.sleep(200);
                 }catch(Exception e){
@@ -51,6 +51,8 @@ public class Producer implements Runnable {
                 /****/
 
                 frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned);
+                //for(int i = 0;i<frameUnsigned.length;i++)
+                //System.out.print(frameUnsigned[i]);
                 if (handleFrame(frameUnsigned)){
                     frameUnsigned = takeGoodFrame(frameUnsigned);
                     queue.put(frameUnsigned);
