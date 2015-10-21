@@ -1,27 +1,22 @@
-/**
- * Created with IntelliJ IDEA.
- * User: s.dossantos
- * Date: 05/10/15
- * Time: 15:26
- * To change this template use File | Settings | File Templates.
- */
+/*
+* Sensor enumeration to analyse frame
+*/
 public enum frame {
-    SENSOR_LIR("LIR", "$", 1, 16, "%"),
-    SENSOR_RIR("RIR", "$", 2, 8, "%"),
-    SENSOR_FUSION("FUS", "$", 3, 8, "%"),
-    SENSOR_MOTOR("MOT", "$", 4, 8, "%");
+    // 36 => $     37 => %      ID => in byte 1 = 49
+    SENSOR_RIR("RIR", 36, 1, 37),     // position sensor right
+    SENSOR_LIR("LIR", 36, 2, 37),     // position sensor left
+    SENSOR_THERMAL("THE", 36, 3, 37), // thermal sensor
+    SENSOR_MOTOR("MOT", 36, 4, 37);   // motor position
 
     public String NAME = "";
-    public String SB = "";
+    public int SB = 0;
     public int ID = 0;
-    public int CS = 0;
-    public String EB = "";
+    public int EB = 0;
 
-    frame(String NAME, String SB, int ID, int CS, String EB) {
+    frame(String NAME, int SB, int ID, int EB) {
         this.NAME = NAME;
         this.SB = SB;
         this.ID = ID;
-        this.CS = CS;
         this.EB = EB;
     }
 }

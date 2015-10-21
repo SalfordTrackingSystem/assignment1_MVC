@@ -1,3 +1,8 @@
+import sun.awt.windows.ThemeReader;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 /**
  * Created with IntelliJ IDEA.
  * User: s.dossantos
@@ -7,8 +12,24 @@
  */
 
 public class Controller {
+
     private Model _model;
     private GUI _view;
+    private  BlockingQueue<int[]> queue;
+    private  BlockingQueue<int[]> qIR;
+    private  BlockingQueue<int[]> qTH;
+    private  BlockingQueue<int[]> qMO;
+    private Producer producer;
+    private Consumer consumer;
+    private ConsumerIR consumerIR;
+    private ConsumerTH consumerTH;
+    private ConsumerMO consumerMO;
+    private Thread p_thread;
+    private Thread c_thread;
+    private Thread c_IR_thread;
+    private Thread c_TH_thread;
+    private Thread c_MO_thread;
+    private int i;
 
     public Controller(){
         _view = new GUI(this);
@@ -17,8 +38,105 @@ public class Controller {
     }
     public void start(){
         _view.visible(true);
-    }
+        initQueueProducerConsumer();
+         /*
+        _model.getSerialPort().collectData((byte)frame.SENSOR_RIR.ID);
+        _model.getSerialPort().collectData((byte)frame.SENSOR_LIR.ID);
+        _model.getSerialPort().collectData((byte)frame.SENSOR_THERMAL.ID);
+        _model.getSerialPort().collectData((byte)frame.SENSOR_MOTOR.ID);
+        */
+        //while(true){
+            /////// ALL TESTS
+            /////
+            /* Simulation of a data send to LIR slider and textPanel **/
+            //int result = _model.simulation();
+            //_view.setValue_L_IR(result);
+            //_view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
+            /////
 
+            /* Simulation of a data frame send to sliders and analyse by checkData method**/
+            //byte[] result = _model.simulation_frame();
+            //_model.checkData(result);
+            /////
+
+            /* Simulation of the final implementation => !! Doesn't works**/
+            //System.out.println(_model.getSerialPort().getData());
+            /////
+
+            /* Simulation of a thermal data frame send to image panel and analyse by checkData method**/
+            //byte[] result = _model.simulation_frame_color();
+            //_model.changedColor(_view.get_tablePanel(), _view.get_imagePanel(), result);
+            /////
+
+            /* Simulation of a thermal data frame and sensor data frame send to sliders and image panel
+             * and analyse by checkData method **/
+             /*
+             byte[] result = _model.simulation_frame_color();
+            _model.checkData(result);
+            byte[] res = _model.simulation_frame();
+            _model.checkData(res);
+            */
+
+            /* Simulation serial port */
+
+            /////
+        //}
+    }
+    public void initQueueProducerConsumer(){
+        // Queues
+        this.queue = new ArrayBlockingQueue<>(21);
+        this.qIR = new ArrayBlockingQueue<>(21);
+        this.qTH = new ArrayBlockingQueue<>(21);
+        this.qMO = new ArrayBlockingQueue<>(21);
+        //receive init
+        this.producer = new Producer(queue, this);
+        this.consumer = new Consumer(queue, producer, this);
+        this.p_thread = new Thread(this.producer);
+        this.c_thread = new Thread(this.consumer);
+        //thread sensors
+        this.consumerIR = new ConsumerIR(qIR, this);
+        this.c_IR_thread = new Thread(this.consumerIR);
+        this.consumerTH = new ConsumerTH(qTH, this);
+        this.c_TH_thread = new Thread(this.consumerTH);
+        this.consumerMO = new ConsumerMO(qMO, this);
+        this.c_MO_thread = new Thread(this.consumerMO);
+        System.out.println("initQueueProducerConsumer OK");
+
+    }
+    public void startThread(){
+        System.out.println("startButton() called");
+        this.p_thread.start();
+        this.c_thread.start();
+        this.c_IR_thread.start();
+        this.c_TH_thread.start();
+        this.c_MO_thread.start();
+        System.out.println("Producer and Consumer has been started");
+
+    }
+    public void startButton(){
+        System.out.println(i+" :i");
+        if(i == 0){
+            startThread();
+        }else{
+            initQueueProducerConsumer();
+            startThread();
+        }
+        i++;
+    }
+    public void stopButton(){
+        producer.setStateFrame(false);
+        consumer.setStateFrame(false);
+    }
+    public void cleanQueue(BlockingQueue<byte[]> q){
+        while(q.isEmpty()){
+            try {
+                q.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+        System.out.println("Queue is clean");
+    }
 
     // Events Methods
     public void setSliderValue_L_IR(int val){
@@ -45,5 +163,26 @@ public class Controller {
     }
     public SerialPort getSerialPort(){
         return _model.getSerialPort();
+    }
+    public BlockingQueue<int[]> getQueue(){
+        return this.queue;
+    }
+    public BlockingQueue<int[]> getQIR(){
+        return this.qIR;
+    }
+    public BlockingQueue<int[]> getQTH(){
+        return this.qTH;
+    }
+    public BlockingQueue<int[]> getQMO(){
+        return this.qMO;
+    }
+    public Thread getP_thread(){
+        return p_thread;
+    }
+    public Thread getC_thread(){
+        return c_thread;
+    }
+    public Producer getProducer(){
+        return producer;
     }
 }
