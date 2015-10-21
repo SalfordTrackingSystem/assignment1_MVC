@@ -7,6 +7,8 @@
  */
 //package com.journaldev.concurrency;
 
+import sun.org.mozilla.javascript.internal.ast.ReturnStatement;
+
 import java.util.concurrent.BlockingQueue;
 
 public class ConsumerTH implements Runnable{
@@ -26,18 +28,23 @@ public class ConsumerTH implements Runnable{
             while(queue.isEmpty() && stateFrame){
                 int[] frame = queue.take();
                 this.handleFrame(frame);
+                //fromFrameToMatrice(frame);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
         }
     }
     private void handleFrame(int[] frame){
+        String cmdTH;
         System.out.print("ConsumedTH : ");
         for (int i=0; i<21 ; i++)
             System.out.print(frame[i] + " ");
         System.out.println();
-        ////////////////
-        //_ctrl.getModel().get_track().get_thermalTrack().rightOrLeftTH(frame);
+        /* Tracking */
+        cmdTH = _ctrl.getModel().get_track().get_thermalTrack().info_tracking(frame);
         _ctrl.getModel().applyOnGUI("THE",0, frame);
+        if (cmdTH=="right"||cmdTH=="left"){
+            _ctrl.getModel().cmdToSend(cmdTH);
+        }
     }
 }
