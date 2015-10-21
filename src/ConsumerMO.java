@@ -40,6 +40,6 @@ public class ConsumerMO implements Runnable{
         ////////////////
         /*float val = frame[2];
         val = (180f/(2080f-1000f))*(val - 1000f);*/
-        _ctrl.getModel().applyOnGUI("MOT",frame[2], frame);
+        _ctrl.getModel().applyOnGUI("MOT", frame[2], frame);
     }
 }

@@ -17,6 +17,7 @@ public class Producer implements Runnable {
     private Boolean stateFrame;
     private int interCmd;
     private int interCmdFalse;
+    private int track;
 
     public Producer(BlockingQueue<int[]> q, Controller controller){
         System.out.println("Producer created");
@@ -25,7 +26,7 @@ public class Producer implements Runnable {
         this.queue = q;
         interCmd = 1;
         interCmdFalse = 1;
-
+        track = 0;
     }
     @Override
     public synchronized void run() {
@@ -34,7 +35,7 @@ public class Producer implements Runnable {
         try {
             while(stateFrame){
                 /*** Real test ready***/
-                _ctrl.getModel().sendCmd(interCmd);
+                _ctrl.getModel().sendCmd(interCmd, track);
                 //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
                 //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
                 try{
@@ -123,5 +124,8 @@ public class Producer implements Runnable {
     }
     public void setStateFrame(Boolean b){
         this.stateFrame = b;
+    }
+    public void setTrack(int b){
+        track = 0;
     }
 }

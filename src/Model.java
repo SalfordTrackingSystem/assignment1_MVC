@@ -72,13 +72,23 @@ public class Model {
                 System.out.println("Invalid CMD");
                 break;
         }
-
     }
-    public void sendCmd(int i){
-        if (i==1)cmd(frame.SENSOR_LIR.NAME);
-        if (i==2)cmd(frame.SENSOR_RIR.NAME);
-        if (i==3)cmd(frame.SENSOR_THERMAL.NAME);
-        if (i==4)cmd(frame.SENSOR_MOTOR.NAME);
+
+    public void sendCmd(int i, int t){
+        if(t==0){
+            if (i==1)cmd(frame.SENSOR_LIR.NAME);
+            if (i==2)cmd(frame.SENSOR_RIR.NAME);
+            if (i==3)cmd(frame.SENSOR_THERMAL.NAME);
+            if (i==4)cmd(frame.SENSOR_MOTOR.NAME);
+        }else if(t==5){
+            cmd(protocol.SENSOR_MOTOR_LEFT.NAME);
+            _ctrl.getProducer().setTrack(0);
+        }else if(t==6){
+            cmd(protocol.SENSOR_MOTOR_RIGHT.NAME);
+            _ctrl.getProducer().setTrack(0);
+        }else{
+            System.out.println("cmd pb with sendCmd()");
+        }
     }
     public byte[] getSensors_simulation(int i){
         byte[] comand = new byte[21];
@@ -405,7 +415,7 @@ public class Model {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } */
     }
-
+     /*
     public void cmdToSend(String cmd){
         byte cmdMotor = 0;
         if (cmd == "right"){
@@ -415,7 +425,7 @@ public class Model {
             cmdMotor =6;
         }
         _sp.txByte(cmdMotor);
-    }
+    }  */
 
 
  //Acceseurs
