@@ -28,6 +28,7 @@ public class ConsumerTH implements Runnable{
             while(queue.isEmpty() && stateFrame){
                 int[] frame = queue.take();
                 this.handleFrame(frame);
+                //fromFrameToMatrice(frame);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
@@ -43,8 +44,8 @@ public class ConsumerTH implements Runnable{
         /* Tracking*/
 
         cmdTH = _ctrl.getModel().get_track().get_thermalTrack().info_tracking(frame);
-        //_ctrl.getGUI().getTextPane().setText(cmdTH);
-        //System.out.println(cmdTH+" :cmdTH");
+        System.out.println(cmdTH);
+
         if (cmdTH=="right"){
             _ctrl.getProducer().setTrack(6);
         }else if (cmdTH=="left"){

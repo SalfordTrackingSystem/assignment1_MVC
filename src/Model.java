@@ -43,34 +43,33 @@ public class Model {
     }
 
     public void cmd(String flag){
-        switch (flag){
-            case "LIR":  // data on the first
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
-                break;
-            case "RIR":
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_RIR.SC);
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_RIR.ID);
-                break;
-            case "THE":
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.SC);
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.ID);
-                break;
-            case "MOT":
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.SC);
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.ID);
-                break;
-            case "MOTL":
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_LEFT.SC);
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_LEFT.ID);
-                break;
-            case "MOTR":
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_RIGHT.SC);
-                _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_RIGHT.ID);
-                break;
-            default:
-                System.out.println("Invalid CMD");
-                break;
+        if (flag.equals("LIR")) {
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_LIR.SC);
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_LIR.ID);
+
+        } else if (flag.equals("RIR")) {
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_RIR.SC);
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_RIR.ID);
+
+        } else if (flag.equals("THE")) {
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_THERMAL.SC);
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_THERMAL.ID);
+
+        } else if (flag.equals("MOT")) {
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_MOTOR_GET.SC);
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_MOTOR_GET.ID);
+
+        } else if (flag.equals("MOTL")) {
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_MOTOR_LEFT.SC);
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_MOTOR_LEFT.ID);
+
+        } else if (flag.equals("MOTR")) {
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_MOTOR_RIGHT.SC);
+            _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_MOTOR_RIGHT.ID);
+
+        } else {
+            System.out.println("Invalid CMD");
+
         }
     }
 
@@ -82,9 +81,11 @@ public class Model {
             if (i==4)cmd(frame.SENSOR_MOTOR.NAME);
         }else if(t==5){
             cmd(protocol.SENSOR_MOTOR_LEFT.NAME);
+            System.out.println("cmd left send");
             _ctrl.getProducer().setTrack(0);
         }else if(t==6){
             cmd(protocol.SENSOR_MOTOR_RIGHT.NAME);
+            System.out.println("cmd right send");
             _ctrl.getProducer().setTrack(0);
         }else{
             System.out.println("cmd pb with sendCmd()");
@@ -256,7 +257,7 @@ public class Model {
             crc ^= (data[byteCtr]);
             /*  For each bit position in the message */
             for (bit = 8; bit > 0; --bit){
-                if ((crc & 0x80) == 0b10000000)/* If the uppermost bit is a 1... */
+                if ((crc & 0x80) == 0x80)//0b10000000)/* If the uppermost bit is a 1... */
                     crc = (byte) ((crc << 1) ^ POLYNOMIAL);
                 else crc = (byte) (crc << 1);
             }
@@ -305,38 +306,37 @@ public class Model {
     }
 
     public void switchQueue(String flag, int[] data){
-        switch (flag){
-            case "LIR":  // data on the first
-                try {
-                    _ctrl.getQIR().put(data);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-                break;
-            case "RIR":
-                try {
-                    _ctrl.getQIR().put(data);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-                break;
-            case "THE":
-                try {
-                    _ctrl.getQTH().put(data);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-                break;
-            case "MOT":
-                try {
-                    _ctrl.getQMO().put(data);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
-                break;
-            default:
-                System.out.println("Invalid NAME");
-                break;
+        if (flag.equals("LIR")) {
+            try {
+                _ctrl.getQIR().put(data);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+        } else if (flag.equals("RIR")) {
+            try {
+                _ctrl.getQIR().put(data);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+        } else if (flag.equals("THE")) {
+            try {
+                _ctrl.getQTH().put(data);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+        } else if (flag.equals("MOT")) {
+            try {
+                _ctrl.getQMO().put(data);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+        } else {
+            System.out.println("Invalid NAME");
+
         }
     }
     /**
@@ -349,38 +349,37 @@ public class Model {
 
         int color = 0;
         int position = 0;
-        switch (flag){
-            case "LIR":  // data on the first
-                _ctrl.getGUI().setValue_L_IR(dist);
-                //_ctrl.getGUI().getTextPane().setText(Integer.toString(dist));
-                //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
-                break;
-            case "RIR":
-                _ctrl.getGUI().setValue_R_IR(dist);
-                //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> R_IR_setTo : ");
-                break;
-            case "THE":
-                for(int i=0 ; i<4 ; i++)
-                    for(int j=0 ; j<4 ; j++){
-                        if (data[17-i*4-j] > 255 || data[17-i*4-j]<0)
-                            color=128;
-                        else
-                            color = 255 - data[17-i*4-j];
-                        //System.out.println(color);
-                        this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(color, 0, 0));
-                        this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
-                    }
-                break;
-            case "MOT":
-                //System.out.println("MOT do nothing");
-                // !! Not really implemented at this time, need more information on the motor returned value
-                //position = data[2];
-                _ctrl.getGUI().setValue_motor(dist);
-                //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> MOTOR_setTo : ");
-                break;
-            default:
-                System.out.println("Invalid NAME");
-                break;
+        if (flag.equals("LIR")) {
+            _ctrl.getGUI().setValue_L_IR(dist);
+            //_ctrl.getGUI().getTextPane().setText(Integer.toString(dist));
+            //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
+
+        } else if (flag.equals("RIR")) {
+            _ctrl.getGUI().setValue_R_IR(dist);
+            //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> R_IR_setTo : ");
+
+        } else if (flag.equals("THE")) {
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++) {
+                    if (data[17 - i * 4 - j] > 255 || data[17 - i * 4 - j] < 0)
+                        color = 128;
+                    else
+                        color = 255 - data[17 - i * 4 - j];
+                    //System.out.println(color);
+                    this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(color, 0, 0));
+                    this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
+                }
+
+        } else if (flag.equals("MOT")) {//System.out.println("MOT do nothing");
+            // !! Not really implemented at this time, need more information on the motor returned value
+            //position = data[2];
+            _ctrl.getGUI().setValue_motor(dist);
+            //_ctrl.getGUI().getTextPane().setText(Integer.toString(dist));
+            //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> MOTOR_setTo : ");
+
+        } else {
+            System.out.println("Invalid NAME");
+
         }
     }
 

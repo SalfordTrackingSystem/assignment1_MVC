@@ -84,10 +84,10 @@ public class Controller {
     }
     public void initQueueProducerConsumer(){
         // Queues
-        this.queue = new ArrayBlockingQueue<>(21);
-        this.qIR = new ArrayBlockingQueue<>(21);
-        this.qTH = new ArrayBlockingQueue<>(21);
-        this.qMO = new ArrayBlockingQueue<>(21);
+        this.queue = new ArrayBlockingQueue<int[]>(21);
+        this.qIR = new ArrayBlockingQueue<int[]>(21);
+        this.qTH = new ArrayBlockingQueue<int[]>(21);
+        this.qMO = new ArrayBlockingQueue<int[]>(21);
         //receive init
         this.producer = new Producer(queue, this);
         this.consumer = new Consumer(queue, producer, this);

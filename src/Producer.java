@@ -127,6 +127,6 @@ public class Producer implements Runnable {
         this.stateFrame = b;
     }
     public void setTrack(int b){
-        track = 0;
+        track = b;
     }
 }

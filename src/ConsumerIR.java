@@ -64,7 +64,7 @@ public class ConsumerIR implements Runnable{
             distanceR |= data[2];
             _ctrl.getModel().applyOnGUI(frame.SENSOR_RIR.NAME, distanceR, data);
         }
-
+        /*
         cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
         if (cmd == "right"){
             //_ctrl.getModel().cmd(protocol.SENSOR_MOTOR_RIGHT.NAME);
@@ -74,6 +74,6 @@ public class ConsumerIR implements Runnable{
             _ctrl.getProducer().setTrack(5);
         }else{
             System.out.println("cmd not valid");
-        }
+        } */
     }
 }

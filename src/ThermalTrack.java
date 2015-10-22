@@ -27,7 +27,8 @@ public class ThermalTrack {
 
         moyenne = getMean(data,nbLigne, nbColonne);
         ecartType = getSDV(data, nbLigne, nbColonne,moyenne);
-
+        System.out.println(moyenne +" :moyenne");
+        System.out.println(ecartType +" :ecartType");
         toleranceMin = moyenne - ecartType;
         toleranceMax = moyenne + ecartType;
 
@@ -46,6 +47,7 @@ public class ThermalTrack {
         //!< Si x% de valeurs sont comprise dans mon intervalle moyenne ±  ecart Type
         else
             return 2;	//La dispersion est forte : on cherche quelqu'un
+
     }
 
     public String info_tracking(int[] frame)
@@ -53,30 +55,43 @@ public class ThermalTrack {
         int[][] matrice = new int[4][4];
         int val = 0;
         int result;
-        int sensitivity = 0;
+        int sensitivity = 50;
         double moyenne_gauche = 0;
         double moyenne_droite = 0;
         int[][] matrice_laterale_gauche = new int[4][2];
         int[][] matrice_laterale_droite = new int[4][2];
-
+        /*
+        for (int i=0; i<21 ; i++)
+            System.out.print(frame[i] + " ");
+        System.out.println(); */
+         /*
         for(int i=0 ; i<4   ; i++)
             for(int j=0 ; j<4 ; j++)
             {
                 val = (i + j) * frame[i*4+j+2];
                 if (val > 255)
                     val=255;
+                 */
 
+        for(int i=0 ; i<4 ; i++) {
+            for(int j=0 ; j<4 ; j++){
+                if (frame[17-i*4-j] > 255 || frame[17-i*4-j]<0)
+                    val=128;
+                else
+                    val = 255 - frame[17-i*4-j];
                 /*orientation classique*/
                 matrice[i][j] = val;
-                System.out.print(Integer.toString(val));
+                System.out.print(val+" ");
             }
-        System.out.println();
+            System.out.println();
+        }
+
 
 
 
         //!< Test sur la matrice generale
         result = isSomeoneThere(matrice, 4,4);
-
+        System.out.println(result+" :result");
         if(result == 1)
         {
             return "tracked";
@@ -84,33 +99,52 @@ public class ThermalTrack {
         else if(result == 2)
         //!< Test sur les bandes laterales
         {
-            for(int i=0 ; i<4   ; i++)
-                for(int j=0 ; j<2 ; j++)
+            System.out.println("to the left");
+
+            for(int i=0 ; i<4   ; i++) {
+                for(int j=0 ; j<2 ; j++){
                     matrice_laterale_gauche[i][j] = matrice[i][j];
-
-            for(int i=0 ; i<4   ; i++)
-                for(int j=2 ; j<4 ; j++)
-                    matrice_laterale_droite[i][j] = matrice[i][j];
-
-            moyenne_gauche = getMean(matrice_laterale_gauche,4,2) + sensitivity;
-            moyenne_droite = getMean(matrice_laterale_droite,4,2) + sensitivity;
-
-            if ( moyenne_gauche < moyenne_droite)
-            {
-                return "left";
+                    System.out.print(matrice[i][j]+" ");
+                }
+                System.out.println();
+            }
+            System.out.println("to the right");
+            for(int i=0 ; i<4   ; i++){
+                for(int j=0 ; j<2 ; j++){
+                    matrice_laterale_droite[i][j] = matrice[i][j+2];
+                    System.out.print(matrice[i][j+2]+" ");
+                }
+                System.out.println();
             }
 
-            else if ( moyenne_gauche > moyenne_droite)
-            {
-                return "right";
-            }
-            else
-            {
-                return "tracked";
+
+            moyenne_gauche = getMean(matrice_laterale_gauche,4,2);
+            moyenne_droite = getMean(matrice_laterale_droite,4,2);
+
+            double diff = Math.abs(moyenne_gauche - moyenne_droite);
+            _ctrl.getGUI().getTextPane().setText(Double.toString(diff));
+
+
+            if(diff > sensitivity){
+                if ( moyenne_gauche < moyenne_droite)
+                {
+                    return "left";
+                }
+
+                else if ( moyenne_gauche > moyenne_droite)
+                {
+                    return "right";
+                }
+                else
+                {
+                    return "tracked";
+                }
             }
         }
         else
             return "vide";
+
+    return "prout";
     }
 
     /**
@@ -124,7 +158,7 @@ public class ThermalTrack {
         double mean = 0;
         int sum = 0;
         for (int i = 0; i< nbLigne; i++)
-            for(int j = 0 ; i < nbColonne ; j++)
+            for(int j = 0 ; j < nbColonne ; j++)
                 sum += data[i][j];
         mean = sum/(nbLigne * nbColonne);
         return mean;
