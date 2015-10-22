@@ -40,9 +40,12 @@ public class ConsumerTH implements Runnable{
         for (int i=0; i<21 ; i++)
             System.out.print(frame[i] + " ");
         System.out.println();
-        /* Tracking*/
-        cmdTH = _ctrl.getModel().get_track().get_thermalTrack().info_tracking(frame);
         _ctrl.getModel().applyOnGUI(protocol.SENSOR_THERMAL.NAME,0, frame);
+        /* Tracking*/
+
+        cmdTH = _ctrl.getModel().get_track().get_thermalTrack().info_tracking(frame);
+        System.out.println(cmdTH);
+
         if (cmdTH=="right"){
             _ctrl.getProducer().setTrack(6);
         }else if (cmdTH=="left"){
