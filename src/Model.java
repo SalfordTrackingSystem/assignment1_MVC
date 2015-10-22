@@ -352,7 +352,7 @@ public class Model {
         switch (flag){
             case "LIR":  // data on the first
                 _ctrl.getGUI().setValue_L_IR(dist);
-                _ctrl.getGUI().getTextPane().setText(Integer.toString(dist));
+                //_ctrl.getGUI().getTextPane().setText(Integer.toString(dist));
                 //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
                 break;
             case "RIR":

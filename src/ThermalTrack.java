@@ -68,7 +68,9 @@ public class ThermalTrack {
 
                 /*orientation classique*/
                 matrice[i][j] = val;
+                System.out.print(Integer.toString(val));
             }
+        System.out.println();
 
 
 
