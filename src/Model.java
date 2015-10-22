@@ -352,11 +352,12 @@ public class Model {
         switch (flag){
             case "LIR":  // data on the first
                 _ctrl.getGUI().setValue_L_IR(dist);
-                _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
+                _ctrl.getGUI().getTextPane().setText(Integer.toString(dist));
+                //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
                 break;
             case "RIR":
                 _ctrl.getGUI().setValue_R_IR(dist);
-                _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> R_IR_setTo : ");
+                //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> R_IR_setTo : ");
                 break;
             case "THE":
                 for(int i=0 ; i<4 ; i++)
@@ -375,7 +376,7 @@ public class Model {
                 // !! Not really implemented at this time, need more information on the motor returned value
                 //position = data[2];
                 _ctrl.getGUI().setValue_motor(dist);
-                _ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> MOTOR_setTo : ");
+                //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> MOTOR_setTo : ");
                 break;
             default:
                 System.out.println("Invalid NAME");

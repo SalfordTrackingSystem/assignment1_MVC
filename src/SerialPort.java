@@ -39,7 +39,7 @@ public class SerialPort implements SerialPortEventListener
     {
         //"/dev/tty.usbserial-A9007UX1", // Mac OS X
         //"/dev/ttyUSB0",                // Linux
-        "COM9"                         // Windows
+        "COM13"                         // Windows
     };
 
 	private InputStream input;                 // Buffered input stream from the port.

@@ -241,4 +241,7 @@ public class GUI extends JFrame
                     tablePanel[i][j].setBackground(new Color(red, 0, 0));
             }
     }
+    public JTextPane getTextPane(){
+        return textPane;
+    }
 }
