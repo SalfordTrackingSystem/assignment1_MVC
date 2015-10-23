@@ -75,10 +75,10 @@ public class Model {
 
     public void sendCmd(int i, int t){
         if(t==0){
-            if (i==1)cmd(frame.SENSOR_LIR.NAME);
-            if (i==2)cmd(frame.SENSOR_RIR.NAME);
+            if (i==1)cmd(frame.SENSOR_THERMAL.NAME);//cmd(frame.SENSOR_LIR.NAME);
+            if (i==2)cmd(frame.SENSOR_THERMAL.NAME);//cmd(frame.SENSOR_RIR.NAME);
             if (i==3)cmd(frame.SENSOR_THERMAL.NAME);
-            if (i==4)cmd(frame.SENSOR_MOTOR.NAME);
+            if (i==4)cmd(frame.SENSOR_THERMAL.NAME);//cmd(frame.SENSOR_MOTOR.NAME);
         }else if(t==5){
             cmd(protocol.SENSOR_MOTOR_LEFT.NAME);
             System.out.println("cmd left send");

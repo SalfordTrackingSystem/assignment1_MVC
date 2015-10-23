@@ -36,10 +36,10 @@ public class Producer implements Runnable {
             while(stateFrame){
                 /*** Real test ready***/
                 _ctrl.getModel().sendCmd(interCmd, track);
-                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
-                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
+                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.SC);
+                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.ID);
                 try{
-                    Thread.sleep(200);
+                    Thread.sleep(100);
                 }catch(Exception e){
                     System.out.println("error");
                 }

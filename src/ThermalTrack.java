@@ -2,149 +2,144 @@
 
 /**
  * Created with IntelliJ IDEA.
- * User: v.gaubert
+ * User: v.gaubert, a.moufounda, S.dossantos
  * Date: 13/10/15
  * Time: 11:56
  * To change this template use File | Settings | File Templates.
  */
+
 public class ThermalTrack {
 
     //Attributes
     private Controller _ctrl;
+    private int[][] matrix;
+    private int result;
+    private int sensitivity;
+    private int[][] matrix_leftSide;
+    private int[][] matrix_rightSide;
+    private double diff_meanLeftRight;
 
-    //Constructor
+    /**
+     * Method     : Constructor of Model class
+     * Parameters : Controller
+     * Returns    : Nothing
+     * Notes      : Initialize ThermalTrack class
+     **/
     public ThermalTrack(Controller controller){
         this._ctrl = controller;
+        matrix = new int[4][4];
+        matrix_leftSide = new int[4][2];
+        matrix_rightSide = new int[4][2];
+        result = 0;
+        sensitivity = 50;
+        diff_meanLeftRight = 0;
     }
 
-    public int isSomeoneThere(int[][] data, int nbLigne, int nbColonne)
+    /**
+     * Method     : isSomeoneThere
+     * Parameters : None
+     * Returns    : A number that indicate ether someone is in front of the camera or not
+     * Notes      :
+     **/
+    public int isSomeoneThere()
     {
         double toleranceMin;
         double toleranceMax;
-        int cnt = 0;
-        double moyenne;
-        double ecartType;
+        double mean;
+        double standardDev;
+        int cnt;
 
-        moyenne = getMean(data,nbLigne, nbColonne);
-        ecartType = getSDV(data, nbLigne, nbColonne,moyenne);
-        System.out.println(moyenne +" :moyenne");
-        System.out.println(ecartType +" :ecartType");
-        toleranceMin = moyenne - ecartType;
-        toleranceMax = moyenne + ecartType;
+        mean = getMean(matrix);
+        standardDev = getStandardDev(matrix);
+        //System.out.println(moyenne +" : mean");
+        //System.out.println(ecartType +" : standard deviation");
+        toleranceMin = mean - standardDev;
+        toleranceMax =  mean + standardDev;
 
-        for(int i=0 ; i<nbLigne   ; i++)
-            for(int j=0 ; j<nbColonne ; j++)
-                if ((data[i][j] > toleranceMin) && (data[i][j] < toleranceMax))
+        cnt = 0;
+        for(int i=0 ; i< matrix.length   ; i++)
+            for(int j=0 ; j< matrix[i].length; j++)
+                if ((matrix[i][j] > toleranceMin) && (matrix[i][j] < toleranceMax))
                     cnt++;
 
-        if (cnt >= (0.9 * nbLigne * nbColonne)) //Si la dispersion est faible..
+        if (cnt >= (0.9 * (matrix.length * matrix[0].length))) //!< matrix.length * matrix[0].length = nbLine * nbRow
+                                //!< If the data dispersion is small
         {
-            if (moyenne > 255/2) // Et si les pixels sont allumés
-                return 1;		// Ok, target focused
+            if (mean > 255/2)   //!< If the whole pixels are red
+                return 1;		//!< Ok, target focused
             else
-                return 0; 	//Il n'y a personne
+                return 0; 	    //!< Nobody's there
         }
-        //!< Si x% de valeurs sont comprise dans mon intervalle moyenne ±  ecart Type
+                                //!< If 90% of the values are ranging in mean ± standard deviation
         else
-            return 2;	//La dispersion est forte : on cherche quelqu'un
-
+            return 2;	        //!< Strong dispersion : someone's there
     }
 
+    /**
+     * Method     : info_tracking
+     * Parameters : the frame given by the thermal camera
+     * Returns    : An indication of the rotation order
+     * Notes      :
+     **/
     public String info_tracking(int[] frame)
     {
-        int[][] matrice = new int[4][4];
         int val = 0;
-        int result;
-        int sensitivity = 50;
-        double moyenne_gauche = 0;
-        double moyenne_droite = 0;
-        int[][] matrice_laterale_gauche = new int[4][2];
-        int[][] matrice_laterale_droite = new int[4][2];
-        /*
-        for (int i=0; i<21 ; i++)
-            System.out.print(frame[i] + " ");
-        System.out.println(); */
-         /*
-        for(int i=0 ; i<4   ; i++)
+        double mean_leftSide;
+        double mean_rightSide;
+
+        for(int i=0 ; i<4 ; i++)                 //!< Filling the matrix with the different color values of each pixel
+        {
             for(int j=0 ; j<4 ; j++)
             {
-                val = (i + j) * frame[i*4+j+2];
-                if (val > 255)
-                    val=255;
-                 */
-
-        for(int i=0 ; i<4 ; i++) {
-            for(int j=0 ; j<4 ; j++){
                 if (frame[17-i*4-j] > 255 || frame[17-i*4-j]<0)
                     val=128;
                 else
                     val = 255 - frame[17-i*4-j];
-                /*orientation classique*/
-                matrice[i][j] = val;
-                System.out.print(val+" ");
+                matrix[i][j] = val;
+                //System.out.print(val+" ");
             }
-            System.out.println();
+            //System.out.println();
         }
 
-
-
-
-        //!< Test sur la matrice generale
-        result = isSomeoneThere(matrice, 4,4);
-        System.out.println(result+" :result");
+        result = isSomeoneThere();               //!< is someone in front of the camera ?
+        //System.out.println(result+" :result");
         if(result == 1)
-        {
             return "tracked";
-        }
-        else if(result == 2)
-        //!< Test sur les bandes laterales
+        else if(result == 2)                     //!< is the person to the right or the left ?
         {
-            System.out.println("to the left");
-
-            for(int i=0 ; i<4   ; i++) {
-                for(int j=0 ; j<2 ; j++){
-                    matrice_laterale_gauche[i][j] = matrice[i][j];
-                    System.out.print(matrice[i][j]+" ");
-                }
-                System.out.println();
-            }
-            System.out.println("to the right");
-            for(int i=0 ; i<4   ; i++){
-                for(int j=0 ; j<2 ; j++){
-                    matrice_laterale_droite[i][j] = matrice[i][j+2];
-                    System.out.print(matrice[i][j+2]+" ");
-                }
-                System.out.println();
-            }
-
-
-            moyenne_gauche = getMean(matrice_laterale_gauche,4,2);
-            moyenne_droite = getMean(matrice_laterale_droite,4,2);
-
-            double diff = Math.abs(moyenne_gauche - moyenne_droite);
-            _ctrl.getGUI().getTextPane().setText(Double.toString(diff));
-
-
-            if(diff > sensitivity){
-                if ( moyenne_gauche < moyenne_droite)
+            //System.out.println("to the left");
+                                                 //!<Filling the matrix left and right with the walue of the left side pixels
+                                                 //!< and the right side pixels
+            for(int i=0 ; i<matrix_leftSide.length   ; i++)
+            {
+                for(int j=0 ; j<matrix_leftSide[i].length ; j++)
                 {
+                    matrix_leftSide[i][j] = matrix[i][j];
+                    matrix_rightSide[i][j] = matrix[i][j+2];
+                    //System.out.print(matrix[i][j]+" ");
+                }
+                //System.out.println();
+            }
+
+            mean_leftSide = getMean(matrix_leftSide);
+            mean_rightSide = getMean(matrix_rightSide);
+            diff_meanLeftRight = Math.abs(mean_leftSide - mean_rightSide); //!< Calculation of the difference between the lef and right mean
+            //_ctrl.getGUI().getTextPane().setText(Double.toString(diff));
+
+            if(diff_meanLeftRight > sensitivity)
+            {
+                if (mean_leftSide < mean_rightSide)
                     return "left";
-                }
-
-                else if ( moyenne_gauche > moyenne_droite)
-                {
+                else if (mean_leftSide > mean_rightSide)
                     return "right";
-                }
                 else
-                {
                     return "tracked";
-                }
             }
         }
         else
-            return "vide";
+            return "empty";
 
-    return "prout";
+        return "empty";
     }
 
     /**
@@ -153,32 +148,39 @@ public class ThermalTrack {
      * @param data
      * @return
      */
-    public double getMean (int[][] data, int nbLigne, int nbColonne)
+    public double getMean (int[][] data)
     {
         double mean = 0;
         int sum = 0;
-        for (int i = 0; i< nbLigne; i++)
-            for(int j = 0 ; j < nbColonne ; j++)
+
+        for (int i = 0; i< data.length; i++)
+            for(int j = 0 ; j < data[i].length ; j++)
                 sum += data[i][j];
-        mean = sum/(nbLigne * nbColonne);
+        mean = sum/(data.length * data[0].length);
         return mean;
     }
 
     /**
      * getSDV()
-     * Renvoie l'écart type
+     * Send back the Standard Deviation
      * * @param data
-     * @param mean
      * @return
      */
-    public double getSDV (int[][] data, int nbLigne, int nbColonne, double mean)
+    public double getStandardDev(int[][] data)
     {
-        double SDV;
-        double X = 0;
-        for(int i = 0; i< nbLigne; i++)
-            for (int j = 0 ; j < nbColonne ; j++)
-                X += (data[i][j] - mean)*(data[i][j] - mean);
-        SDV = Math.sqrt(X /(nbLigne * nbColonne));
-        return SDV;
+        double standardDev;
+        double sum = 0;
+        double mean = getMean(data);
+
+        for (int i = 0; i< data.length; i++)
+            for(int j = 0 ; j < data[i].length ; j++)
+                sum += (data[i][j] - mean)*(data[i][j] - mean);
+        standardDev = Math.sqrt(sum /(data.length * data[0].length));
+        return standardDev;
+    }
+
+    private double getDiff_meanLeftRight()
+    {
+        return this.diff_meanLeftRight;
     }
 }
