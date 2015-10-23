@@ -409,7 +409,7 @@ public int[] signedToUnsignedArray(byte[] f){
         double SDV;
         double X = 0;
         for(int i = 0; i<data.length; i++){
-            X += (data[i] - m)*(data[i]-m);
+            X += Math.pow(data[i]-m, 2);
         }
         SDV = Math.sqrt(X /data.length);
         return SDV;

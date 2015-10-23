@@ -60,13 +60,10 @@ public class IRTrack {
      * @param distanceL
      * @param distanceR
      */
-    public void addArrayIR(int distanceL, int distanceR,int dim){
+    public void addArrayIR(int distanceL, int distanceR, int dim){
         this.distanceL[i] = distanceL;
         this.distanceR[i] = distanceR;
-        if (i > dim){
-
-            i =0; // Remise à zéro du compteur quand le tableau est rempli
-        }
+        if (i > dim) i=0;
         i++;
     }
 

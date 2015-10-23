@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,13 +10,16 @@
 public class ThermalTrack {
 
     //Attributes
-    private int[][] THdata;
+    private ArrayList THdata;
     int i = 0; // compteur
     private Controller _ctrl;
+    private ArrayList goodFrame;
 
     //Constructor
     public ThermalTrack(Controller controller){
         this._ctrl = controller;
+        THdata = new ArrayList();
+        goodFrame = new ArrayList();
     }
 
     /**
@@ -65,14 +69,18 @@ public class ThermalTrack {
      * @param frame
      */
     public void addArrayTH(int[] frame, int dim){
-        THdata[i] = frame;
-        if (i>dim){
-            i=0; //réinitialise le compteur
+        for(int k=2; k<18; k++)
+            goodFrame.add(frame[k]);
+        THdata.add(goodFrame);
+        if (THdata.size()>dim){
+            _ctrl.getModel().getTracking().sensorFusion(THdata);
+            i=0;
+            THdata.clear();
+            goodFrame.clear();
         }
         i++;
     }
-
-    public int[][] getArrayTH(){
+    public ArrayList getArrayTH(){
         return THdata;
     }
 }
