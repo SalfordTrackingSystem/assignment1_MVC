@@ -35,6 +35,7 @@ public class Producer implements Runnable {
         try {
             while(stateFrame){
                 /*** Real test ready***/
+                //_ctrl.getGUI().getTextPane().setText(Integer.toString(track));
                 _ctrl.getModel().sendCmd(interCmd, track);
                 //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.SC);
                 //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.ID);
