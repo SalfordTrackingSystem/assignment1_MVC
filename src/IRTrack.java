@@ -4,17 +4,14 @@
  * Date: 13/10/15
  * Time: 11:56
  * To change this template use File | Settings | File Templates.
+ * Method related to the tracking with infrared sensors.
  */
 public class IRTrack {
-
-    //Attributes
     private int marge;
     private int[] distanceL = new int[10];
     private int[] distanceR = new int[10];
-    private int i =0 ; //Compteur
-
+    private int i =0 ; //Clock
     private Controller _ctrl;
-
     //Constructor
     public IRTrack (Controller controller){
         this._ctrl = controller;
@@ -67,6 +64,7 @@ public class IRTrack {
         i++;
     }
 
+    //Accessors & Mutators
     public int[] getArrayLIR(){
         return distanceL;
     }

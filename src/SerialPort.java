@@ -6,9 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Enumeration;
 
-//import gnu.io.SerialPort;
 /**
- * Created by Theo Theodoridis.
+ * Created by Theo Theodoridis and modify
  * Class    : SerialPort
  * Version  : v1.0
  * Date     : © Copyright 27-Jul-2012
@@ -26,13 +25,8 @@ public class SerialPort implements SerialPortEventListener
     private boolean cmdOK = false;
     private boolean cmdNOK = false;
     private byte sensor = 0;
-
-    //private byte[] frameTest = {36, 50, 51, 52, 52, 53, 54, 55, 56, 57, 58, 59, 60, 0, 0, 0, 0, 0, 0, 0, 37};
-    //private byte dataSerial[] = new byte[21];
     private int cnt = 0;
-    //private byte rxByteSerial = 0;
-	private gnu.io.SerialPort serialPort;
-    //FileOutputStream fos = null;
+    private gnu.io.SerialPort serialPort;
 
 	private static final String PORT_NAMES[] =
     {
@@ -93,8 +87,7 @@ public class SerialPort implements SerialPortEventListener
 		}
 		try
         {
-            //fos = new FileOutputStream(new File("test.txt"));
-			// [+]Open serial port, and use class name for the appName.
+            // [+]Open serial port, and use class name for the appName.
 			serialPort = (gnu.io.SerialPort)portId.open(this.getClass().getName(), TIME_OUT);
 
 			// [+]Set port parameters.
@@ -107,8 +100,7 @@ public class SerialPort implements SerialPortEventListener
 			// [+]Add event listeners.
             serialPort.addEventListener(this);
 			serialPort.notifyOnDataAvailable(true);
-            //}
-		}
+        }
         catch (Exception e)
         {
 			System.err.println(e.toString());
@@ -159,38 +151,6 @@ public class SerialPort implements SerialPortEventListener
                         cnt = 0;
                 }
                 System.out.println();
-
-                 /*
-                if(data[0] == (byte)35 && data[1] == (byte)65)  // if #A
-                {
-                    cmdOK = true;
-                }else if(data[0] == (byte)35 && data[1] == (byte)78)  // if #N
-                {
-                    //cmdNOK = true;
-                    requestData(sensor);
-                }
-
-                if(cmdOK && data[0] == (byte)36 && data[20] == (byte)37)  // if frame is valid  $...%
-                {
-                    // [+]Read incoming bytes:
-                    for(byte i=0 ; i<data.length ; i++)
-                    {
-                        rxData[cnt] = data[i];
-                        if(++cnt == 21)
-                            cnt = 0;
-                    }
-                    for(int i = 0; i < ack.length; i++) // send ack
-                    {
-                        txByte(ack[i]);
-                    }
-                    cmdOK = false;
-                    delayMs(1);
-                }else {
-                    for(int i = 0; i < nac.length; i++)
-                    {
-                        txByte(nac[i]);
-                    }
-                }    */
             }
             catch(Exception e)
             {
@@ -198,18 +158,6 @@ public class SerialPort implements SerialPortEventListener
 			}
 		}
 	}
-
-   /**
-    * Method     : SerialPort::rxByte()
-    * Purpose    : Receive bytes from serial port.
-    * Parameters : None.
-    * Returns    : A byte array.
-    * Notes      : None.
-    **/
-//    public byte[] rxByte()
-//    {
-//        return((data == null) ? new byte[0] : data);
-//    }
 
    /**
     * Method     : SerialPort::txByte()
@@ -229,30 +177,6 @@ public class SerialPort implements SerialPortEventListener
             System.err.println("SerialPort::sendByte error : " + e.toString());
         }
     }
-    /*
-    public void rxByte()
-    {
-        try
-        {
-            // [+]Acquire bytes from serial port.
-            int available = input.available();  //return number of bytes available in the message
-            data = new byte[available];
-            input.read(data, 0, available);
-
-            // [+]Read incoming bytes:
-            for(byte i=0 ; i<data.length ; i++)
-            {
-                rxData[cnt] = data[i];
-                if(++cnt == 21)
-                    cnt = 0;
-            }
-            delayMs(1);
-        }
-        catch(Exception e)
-        {
-            System.err.println(e.toString());
-        }
-    } */
 
    /**
     * Method     : Delay::delayMs()
@@ -273,21 +197,6 @@ public class SerialPort implements SerialPortEventListener
         };
     }
 
-   /**
-    * Method     : SerialPort::main()
-    * Purpose    : Default main method used for testing the SerialPort class.
-    * Parameters : - args : Initialization parameters.
-    * Returns    : Nothing.
-    * Notes      : None.
-    **/
-   /*
-	public static void main(String args[]) throws Exception
-    {
-		SerialPort sp = new SerialPort();
-		sp.initialize();
-	}
-    */
-
    //Accessors & mutators
     public byte[] getData(){
         return data;
@@ -299,17 +208,17 @@ public class SerialPort implements SerialPortEventListener
     public InputStream get_input(){
         return input;
     }
-    /* Have to be upgraded
-    public void requestData(byte sensor)
+    public byte[] getAck()
     {
-        this.sensor = sensor;
-        byte[] claimData = {36, sensor, 37};     //$1%
-        for (int i=0; i< claimData.length; i++)
-        {
-            txByte(claimData[i]);
-        }
-    }*/
+        return ack;
+    }
 
+    public byte[] getNac()
+    {
+        return nac;
+    }
+
+    // Request methods
     public void requestData(byte[] sensor)
     {
         for (int i=0; i< sensor.length; i++)
@@ -326,34 +235,4 @@ public class SerialPort implements SerialPortEventListener
             rxData[i] = 0;
         }
     }
-    /*
-    public void timer (boolean state)
-    {
-        long time = System.currentTimeMillis();
-        long actualTime = 0;
-        long timeout = 0;
-
-        while(state == true)
-        {
-            if(timeout >= 50) //50ms
-            {
-                requestData(sensor);
-            }else{
-                actualTime = System.currentTimeMillis();
-                timeout = actualTime - time;
-            }
-        }
-    }*/
-
-
-    public byte[] getAck()
-    {
-        return ack;
-    }
-
-    public byte[] getNac()
-    {
-        return nac;
-    }
-
 }

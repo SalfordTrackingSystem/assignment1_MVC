@@ -4,6 +4,7 @@
  * Date: 16/10/15
  * Time: 16:55
  * To change this template use File | Settings | File Templates.
+ * Help us to handle the communication protocol.
  */
 public enum protocol {
     SENSOR_RIR("RIR", '#', '1', 'A', 'N'),

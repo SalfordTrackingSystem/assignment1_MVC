@@ -4,8 +4,8 @@
  * Date: 11/10/15
  * Time: 12:02
  * To change this template use File | Settings | File Templates.
+ * Take data in the specify thermal queue
  */
-//package com.journaldev.concurrency;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -20,6 +20,10 @@ public class ConsumerTH implements Runnable{
         this.stateFrame = true;
         this.queue = q;
     }
+
+    /**
+     * Consume the queue if the frame is valid.
+     */
     @Override
     public synchronized void run() {
         try{
@@ -38,9 +42,6 @@ public class ConsumerTH implements Runnable{
         for (int i=0; i<21 ; i++)
             System.out.print(frame[i] + " ");
         System.out.println();
-        ////////////////
-        //cmd = _ctrl.getModel().get_track().get_thermalTrack().rightOrLeftTH(frame);
-        //_ctrl.getModel().cmdToSend(cmd);
         _ctrl.getModel().applyOnGUI("THE",0, frame);
     }
 }

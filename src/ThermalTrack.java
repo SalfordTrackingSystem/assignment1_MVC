@@ -6,16 +6,14 @@ import java.util.ArrayList;
  * Date: 13/10/15
  * Time: 11:56
  * To change this template use File | Settings | File Templates.
+ * Method related to the tracking with thermal camera
  */
 public class ThermalTrack {
-
-    //Attributes
     private ArrayList THdata;
     int i = 0; // compteur
     private Controller _ctrl;
     private ArrayList goodFrame;
 
-    //Constructor
     public ThermalTrack(Controller controller){
         this._ctrl = controller;
         THdata = new ArrayList();
@@ -33,7 +31,7 @@ public class ThermalTrack {
         int marge =20;                         //Error of thermal sensor = 0.14° -> 14 in byte
         int cnt=0;
         int moyenneR, moyenneL,sumL=0,sumR=0;
-        for(int i=2 ; i<18 ; i++){             // Boucle permettant de faire la somme des valeurs des pixels de droite
+        for(int i=2 ; i<18 ; i++){
             sumR += THdata[i];
             cnt++;
             if(cnt==2){
@@ -43,7 +41,7 @@ public class ThermalTrack {
         }
         moyenneR = sumR/8;
         cnt =0;
-        for(int i=4 ; i<18 ; i++){            // Boucle permettant de faire la somme des valeurs des pixels de gauche
+        for(int i=4 ; i<18 ; i++){
             sumR += THdata[i];
             cnt++;
             if(cnt==2){
@@ -53,7 +51,6 @@ public class ThermalTrack {
         }
         moyenneL = sumL/8;
 
-        //Compare les deux moyennes et en déduire une direction pour commander le moteur
         if (moyenneL>moyenneR + marge){
             side = "left";
         }
@@ -65,7 +62,7 @@ public class ThermalTrack {
 
     /**
      * addArrayTH()
-     * Permet de stocker 10 mesures du capteur thermique pour pouvoir les traiter
+     * Get 10 thermal frame
      * @param frame
      */
     public void addArrayTH(int[] frame, int dim){

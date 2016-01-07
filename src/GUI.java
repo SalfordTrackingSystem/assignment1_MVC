@@ -11,6 +11,7 @@ import java.awt.event.AdjustmentListener;
  * Created by Sebastien Dos Santos
  * Class    : GUI
  * Comments : Class that creates a Graphical Users Interface.
+ * Display the GUI components and Events.
  **/
 
 public class GUI extends JFrame
@@ -45,7 +46,6 @@ public class GUI extends JFrame
     {
         this._ctrl = controller;
         start();
-        //scrollPane event
         scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
             public void adjustmentValueChanged(AdjustmentEvent e) {
                 e.getAdjustable().setValue(e.getAdjustable().getMaximum());
@@ -93,7 +93,6 @@ public class GUI extends JFrame
                 byte[] result = cmd.getBytes();
                 for ( int i=0; i<result.length; i++) {
                     _ctrl.getSerialPort().txByte(result[i]);
-                    //System.out.println(result[i]);
                 }
                 textFieldCmd.setText("");
             }
@@ -105,8 +104,6 @@ public class GUI extends JFrame
                 setValue_textPanel("#1", "L-IR cmd send => ");
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.SC);
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_LIR.ID);
-                //System.out.println((byte)protocol.SENSOR_LIR.SC);
-                //System.out.println((byte)protocol.SENSOR_LIR.ID);
             }
         });
         RIRButton.addActionListener(new ActionListener() {
@@ -116,8 +113,6 @@ public class GUI extends JFrame
                 setValue_textPanel("#2", "R-IR cmd send => ");
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_RIR.SC);
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_RIR.ID);
-                //System.out.println((byte)protocol.SENSOR_RIR.SC);
-                //System.out.println((byte)protocol.SENSOR_RIR.ID);
             }
         });
         THEButton.addActionListener(new ActionListener() {
@@ -127,8 +122,6 @@ public class GUI extends JFrame
                 setValue_textPanel("#3", "THE cmd send => ");
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.SC);
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.ID);
-                //System.out.println((byte)protocol.SENSOR_THERMAL.SC);
-                //System.out.println((byte)protocol.SENSOR_THERMAL.ID);
             }
         });
         MOTButton.addActionListener(new ActionListener() {
@@ -138,8 +131,6 @@ public class GUI extends JFrame
                 setValue_textPanel("#4", "MOT cmd send => ");
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.SC);
                 _ctrl.getSerialPort().txByte((byte)protocol.SENSOR_MOTOR_GET.ID);
-                //System.out.println((byte)protocol.SENSOR_MOTOR_GET.SC);
-                //System.out.println((byte)protocol.SENSOR_MOTOR_GET.ID);
             }
         });
     }
@@ -156,24 +147,11 @@ public class GUI extends JFrame
             tablePanel[i][j].setBackground(new Color((i+j)*18, 0, 0));
             imagePanel.add(tablePanel[i][j]);
         }
-
         // [+]Configure and show the frame:
         frame = new JFrame("GUI");
         frame.setContentPane(this.panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-
-        // Events
-        /* // Comment because GUI is only used to show and it's not interactive
-        slider_L_IR.addChangeListener(new Events(this._ctrl));
-        slider_R_IR.addChangeListener(new Events(this._ctrl));
-        slider_fusion.addChangeListener(new Events(this._ctrl));
-        slider_motor.addChangeListener(new Events(this._ctrl));
-        */
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 
     public void setData(byte data[]){
@@ -182,10 +160,13 @@ public class GUI extends JFrame
         System.out.print(data+", ");
     }
 
+    /**
+     * Show the GUI
+     * @param yesOrNo
+     */
     public void visible(boolean yesOrNo){
         frame.setVisible(yesOrNo);
     }
-
 
     //Accessors & mutators
     public JSlider getSlider_L_IR(){
@@ -213,11 +194,7 @@ public class GUI extends JFrame
         this.slider_motor.setValue(val);
     }
     public void setValue_textPanel(String val, String pre){
-        //this.textPane.setText(pre + val);
-        //JTextPane textPane = new JTextPane();
-        //this.textPane.setText( "original text" );
         StyledDocument doc = this.textPane.getStyledDocument();
-        //  Add some text
         try
         {
             doc.insertString(doc.getLength(), pre + val +"\n", null);

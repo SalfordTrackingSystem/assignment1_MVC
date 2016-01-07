@@ -5,10 +5,7 @@
  * Time: 11:59
  * To change this template use File | Settings | File Templates.
  */
-//package com.journaldev.concurrency;
-
 import java.util.concurrent.BlockingQueue;
-
 
 public class Producer implements Runnable {
 
@@ -22,15 +19,19 @@ public class Producer implements Runnable {
         this.stateFrame = true;
         this.queue = q;
     }
+
+    /**
+     * Background function, take data when their are send.
+     * Java code not handle unsigned byte, so we have to make the conversion.
+     */
     @Override
     public synchronized void run() {
         byte[] frameSigned;
         int[] frameUnsigned;
         try {
             while(stateFrame){
-                //frameSigned = _ctrl.getModel().simulation_frame_color();
-                frameSigned = _ctrl.getSerialPort().rxData();
-                frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned);
+                frameSigned = _ctrl.getSerialPort().rxData(); // Get data
+                frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned); // Conversion
                 if (handleFrame(frameUnsigned)){
                     frameUnsigned = takeGoodFrame(frameUnsigned);
                     queue.put(frameUnsigned);
@@ -41,7 +42,13 @@ public class Producer implements Runnable {
             e.printStackTrace();
         }
     }
-    public Boolean handleFrame(int[] f){  // return ack, nack, frameValidOrNot
+
+    /**
+     * Check the frame and valid or not
+     * @param f  : frame
+     * @return ack, nack, frameValidOrNot
+     */
+    public Boolean handleFrame(int[] f){
         Boolean flag_ack = false;
         Boolean flag_nack = false;
         Boolean flag_return = false;
@@ -74,12 +81,17 @@ public class Producer implements Runnable {
         }
         return flag_return;
     }
+
+    /**
+     * Take only the needed data in the frame, without ack or nack.
+     * @param f : frame
+     * @return
+     */
     public int[] takeGoodFrame(int[] f){
         int[] goodFrame = new int[21];
         for(int i=0 ; i<f.length ; i++){
             if(f[i] == frame.SENSOR_LIR.SB){
                 for(int j=i; j<i+21 ; j++){
-                    //System.out.print(j+" ");
                     goodFrame[j-i] = f[j];
                 }
                 break;
@@ -87,6 +99,8 @@ public class Producer implements Runnable {
         }
         return goodFrame;
     }
+
+    // Accesors & Mutators
     public Boolean getStateFrame(){
         return this.stateFrame;
     }

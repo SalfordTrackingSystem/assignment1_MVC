@@ -1,9 +1,6 @@
-
-
 /**
  * Created by Dos Santos Sébastien
  **/
-   //TEST
 public class Run
 {
    /**
@@ -14,9 +11,7 @@ public class Run
     * Notes      : Implement the Controller
     **/
 
-    public static void main(String[] args)
-    {
-
+    public static void main(String[] args){
         Controller intcont = new Controller();
     }
 }

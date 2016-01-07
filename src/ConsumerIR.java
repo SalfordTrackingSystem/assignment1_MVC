@@ -4,8 +4,8 @@
  * Date: 11/10/15
  * Time: 12:02
  * To change this template use File | Settings | File Templates.
+ * Take data in the specify infrared queue
  */
-//package com.journaldev.concurrency;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -22,6 +22,10 @@ public class ConsumerIR implements Runnable{
         this.stateFrame = true;
         this.queue = q;
     }
+
+    /**
+     * Consume the queue if the frame is valid.
+     */
     @Override
     public synchronized void run() {
         try{
@@ -35,7 +39,7 @@ public class ConsumerIR implements Runnable{
     }
 
     /**
-     *
+     * Transform data frame into distance get by infrared sensors.
      * @param data
      */
     private void handleFrame(int[] data){
@@ -60,12 +64,6 @@ public class ConsumerIR implements Runnable{
             distanceR |= data[3];
             _ctrl.getModel().applyOnGUI("RIR", distanceR, data);
         }
-        /*
-        cmd = _ctrl.getModel().get_track().get_irTrack().rightOrLeftIR(distanceR,distanceL);
-        if (cmd=="right"||cmd=="left"){
-            _ctrl.getModel().cmdToSend(cmd);
-        }
-       */
         _ctrl.getModel().getTracking().get_irTrack().addArrayIR(distanceL,distanceR,9);      //Stock les distance dans un tableau
     }
 }

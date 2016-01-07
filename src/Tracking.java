@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.util.ArrayList;
 
 /**
@@ -8,11 +6,10 @@ import java.util.ArrayList;
  * Date: 13/10/15
  * Time: 11:49
  * To change this template use File | Settings | File Templates.
+ * Sensors fusion combine infrared and thermal sensors.
  */
 public class Tracking {
-
-    //Attributes
-    //kalman parameter
+    // Kalman parameters
     private double q; //process noise covariance
     private double r; //measurement noise covariance
     private double x; //value
@@ -25,7 +22,6 @@ public class Tracking {
     private IRTrack _irTrack;
     private ThermalTrack _thermalTrack;
 
-    //Constructor
     public Tracking(Controller controller) {
         this._ctrl = controller;
         _motorTrack = new MotorTrack(_ctrl);
@@ -33,7 +29,6 @@ public class Tracking {
         _thermalTrack = new ThermalTrack(_ctrl);
         tableSize = 10;
     }
-
 
     public void sensorFusion (ArrayList<ArrayList> THdata){
         int moyenneLIR, moyenneRIR;
@@ -49,7 +44,6 @@ public class Tracking {
         SDVRIR = _ctrl.getModel().getSDV(_irTrack.getArrayRIR(),moyenneRIR);
 
         //TH
-        //arrayTH = _thermalTrack.getArrayTH();
         for(int i = 0; i < THdata.size(); i++) {
             ArrayList<Integer> res = THdata.get(i);
             for(int j = 0; j < res.size(); j++)
@@ -58,14 +52,7 @@ public class Tracking {
             sdvTH[i] = _ctrl.getModel().getSDV(colTH, moyTH[i]);
         }
         SDVTH = _ctrl.getModel().getMean(sdvTH);
-           /*
-        if(SDVLIR<SDVTH || SDVRIR<SDVTH)
-            _ctrl.getModel().cmdToSend(sideIR);
-        else
-            _ctrl.getModel().cmdToSend(sideTH);
-                 */
-      }
-
+     }
 
     /**
      * kalman_init
@@ -99,7 +86,7 @@ public class Tracking {
         p = (1 - k) * p;
     }
 
-    //Accusers & Mutters
+    //Accessors & Mutators
     public MotorTrack get_motorTrack(){
         return _motorTrack;
     }

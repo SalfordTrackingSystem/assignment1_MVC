@@ -1,5 +1,3 @@
-import sun.awt.windows.ThemeReader;
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -9,12 +7,14 @@ import java.util.concurrent.BlockingQueue;
  * Date: 03/10/15
  * Time: 10:46
  * To change this template use File | Settings | File Templates.
+ * The controller handle the model class with method and view class GUI. (See MVC architecture)
  */
 
 public class Controller {
-
+    // Initialization of Model and View class
     private Model _model;
     private GUI _view;
+    // Initialization of queues, thread, producer, consumers class variable
     private  BlockingQueue<int[]> queue;
     private  BlockingQueue<int[]> qIR;
     private  BlockingQueue<int[]> qTH;
@@ -32,69 +32,29 @@ public class Controller {
     private int i;
 
     public Controller(){
+        // Instanciation of Model and View class
         _view = new GUI(this);
         this.start();
         _model = new Model(this);
-
     }
+
     public void start(){
-        _view.visible(true);
-        initQueueProducerConsumer();
-         /*
-        _model.getSerialPort().collectData((byte)frame.SENSOR_RIR.ID);
-        _model.getSerialPort().collectData((byte)frame.SENSOR_LIR.ID);
-        _model.getSerialPort().collectData((byte)frame.SENSOR_THERMAL.ID);
-        _model.getSerialPort().collectData((byte)frame.SENSOR_MOTOR.ID);
-        */
-        //while(true){
-            /////// ALL TESTS
-            /////
-            /* Simulation of a data send to LIR slider and textPanel **/
-            //int result = _model.simulation();
-            //_view.setValue_L_IR(result);
-            //_view.setValue_textPanel(Integer.toString(result), "> L_IR_setTo : ");
-            /////
-
-            /* Simulation of a data frame send to sliders and analyse by checkData method**/
-            //byte[] result = _model.simulation_frame();
-            //_model.checkData(result);
-            /////
-
-            /* Simulation of the final implementation => !! Doesn't works**/
-            //System.out.println(_model.getSerialPort().getData());
-            /////
-
-            /* Simulation of a thermal data frame send to image panel and analyse by checkData method**/
-            //byte[] result = _model.simulation_frame_color();
-            //_model.changedColor(_view.get_tablePanel(), _view.get_imagePanel(), result);
-            /////
-
-            /* Simulation of a thermal data frame and sensor data frame send to sliders and image panel
-             * and analyse by checkData method **/
-             /*
-             byte[] result = _model.simulation_frame_color();
-            _model.checkData(result);
-            byte[] res = _model.simulation_frame();
-            _model.checkData(res);
-            */
-
-            /* Simulation serial port */
-
-            /////
-        //}
+        _view.visible(true);           // show the GUI
+        initQueueProducerConsumer();   // Instanciation of Model and View class
     }
+
     public void initQueueProducerConsumer(){
         // Queues
         this.queue = new ArrayBlockingQueue<>(21);
         this.qIR = new ArrayBlockingQueue<>(21);
         this.qTH = new ArrayBlockingQueue<>(21);
         this.qMO = new ArrayBlockingQueue<>(21);
-        //receive init
+        // "Receive data" initialization => producer, consumer and thread
         this.producer = new Producer(queue, this);
         this.consumer = new Consumer(queue, producer, this);
         this.p_thread = new Thread(this.producer);
         this.c_thread = new Thread(this.consumer);
-        //thread sensors
+        // Consumers and threads sensors
         this.consumerIR = new ConsumerIR(qIR, this);
         this.c_IR_thread = new Thread(this.consumerIR);
         this.consumerTH = new ConsumerTH(qTH, this);
@@ -102,8 +62,12 @@ public class Controller {
         this.consumerMO = new ConsumerMO(qMO, this);
         this.c_MO_thread = new Thread(this.consumerMO);
         System.out.println("initQueueProducerConsumer OK");
-
     }
+
+    /**
+     * Start all the different thread.
+     * Handle the stop and start acquisition in the GUI.
+     */
     public void startThread(){
         System.out.println("startButton() called");
         this.p_thread.start();
@@ -112,22 +76,32 @@ public class Controller {
         this.c_TH_thread.start();
         this.c_MO_thread.start();
         System.out.println("Producer and Consumer has been started");
-
     }
+
+    /**
+     *  Handle stop and start data acquisition in the GUI
+     */
     public void startButton(){
-        System.out.println(i+" :i");
         if(i == 0){
             startThread();
         }else{
             initQueueProducerConsumer();
             startThread();
         }
-        i++;
     }
+
+    /**
+     *  Stop data acquisition.
+     */
     public void stopButton(){
         producer.setStateFrame(false);
         consumer.setStateFrame(false);
     }
+
+    /**
+     * Clean the queue before restarting the app.
+     * @param q : queue
+     */
     public void cleanQueue(BlockingQueue<byte[]> q){
         while(q.isEmpty()){
             try {
@@ -139,7 +113,7 @@ public class Controller {
         System.out.println("Queue is clean");
     }
 
-    // Events Methods
+    // Events Methods Mutator
     public void setSliderValue_L_IR(int val){
         getGUI().setValue_L_IR(val);
     }
@@ -152,8 +126,6 @@ public class Controller {
     public void setSliderValue_motor(int val){
         getGUI().setValue_motor(val);
     }
-
-
 
     //Accessors & Mutators
     public GUI getGUI(){

@@ -15,6 +15,7 @@ import java.lang.Math.*;
  * Date: 03/10/15
  * Time: 10:47
  * To change this template use File | Settings | File Templates.
+ * All the method we need...
  */
 
 
@@ -22,10 +23,6 @@ public class Model {
     private Controller _ctrl;
     private SerialPort _sp;
     private Tracking _track;
-    //private BlockingQueue<byte[]> qIR;
-    //private BlockingQueue<byte[]> qTH;
-    //private BlockingQueue<byte[]> qMO;
-
 
     /**
      * Method     : Constructor of Model class
@@ -41,44 +38,8 @@ public class Model {
         long time = System.currentTimeMillis();
         long actualTime = 0;
         long timeout = 0;
-
-        // claim data every 50ms
-        /* Pilou function
-        while (true)
-        {
-            if(timeout >= 50) //50ms
-            {
-                _ctrl.getSerialPort().requestData((byte)1);
-                _ctrl.getSerialPort().requestData((byte)2);
-                _ctrl.getSerialPort().requestData((byte)3);
-                _ctrl.getSerialPort().requestData((byte)4);
-                timeout = 0;
-                time = System.currentTimeMillis();
-            }else{
-                actualTime = System.currentTimeMillis();
-                timeout = actualTime - time;
-            }
-        }
-        */
-        //byte data[] = _sp.;
-        //while(true){
-            // View frame
-            /*
-            for (int i =0;i<21;i++){
-            //String str = new String(_sp.rxData(), "UTF_8");
-
-            //_ctrl.getGUI().setValue_textPanel(str, "DATA : ");
-                System.out.print(_sp.rxData()[i]+" ");
-            }
-            System.out.println();
-            //System.out.println();
-            */
-            // Set image data to the GUI
-            /*
-            _ctrl.getGUI().setImage(_sp.rxData());
-            */
-        //}
     }
+
     /**
      * Method     : simulation()
      * Parameters : Waiting time in milliseconds
@@ -96,6 +57,7 @@ public class Model {
         System.out.println(n);
         return n;
     }
+
     /**
      * Method     : simulation_frame()
      * Returns    : 8 or 16 bits frame with |SB|ID|CRC|CN|EB|
@@ -113,7 +75,6 @@ public class Model {
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        //System.out.println(frame[0]);
         return frame;
     }
     /**
@@ -141,15 +102,14 @@ public class Model {
                 else crc = (byte) (crc << 1);
             }
         }
-        if (crc != crcReceive){
-            //System.out.println(crc);
+        if (crc != crcReceive){  // We haven't the time to debug the crc, so we always returning True.
             return true;  // put false for the real application
         }
         else{
-            //System.out.println(crc);
             return true;
         }
     }
+
     /**
      * Method     : checkData()
      * Parameters : byte[] data (frame)
@@ -176,7 +136,6 @@ public class Model {
                     System.out.println("Frame validated => |SB|ID|CRC|CN|EB|");
                     System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
                     switchQueue(flag, data);
-                    //this.applyOnGUI(flag, data);
                 }
                 else                                            System.out.println("EB is not valid");
             }
@@ -184,6 +143,11 @@ public class Model {
         else                                                    System.out.println("SB is not valid");
     }
 
+    /**
+     * Choose the right queue to put the frame in.
+     * @param flag
+     * @param data
+     */
     public void switchQueue(String flag, int[] data){
         switch (flag){
             case "LIR":  // data on the first
@@ -243,14 +207,11 @@ public class Model {
                     for(int j=0 ; j<4 ; j++){
                         if (data[17-i*4-j] > 255 || data[17-i*4-j]<0) color=128;
                         else color = data[17-i*4-j];
-                        //System.out.println(color);
                         this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(color, 0, 0));
                         this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
                     }
                 break;
             case "MOT":
-                //System.out.println("MOT do nothing");
-                // !! Not really implemented at this time, need more information on the motor returned value
                 position = data[2];
                 _ctrl.getGUI().setValue_motor(position);
                 _ctrl.getGUI().setValue_textPanel(Integer.toString(position), "> MOTOR_setTo : ");
@@ -278,11 +239,6 @@ public class Model {
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        //System.out.println(frame[0]);
-        /*
-        for(int j=0;j<frameSigned.length;j++){
-            frame[j] = (frameSigned[j] & 0xFF);
-        } */
         return (frameSigned);
     }
 
@@ -309,16 +265,11 @@ public int[] signedToUnsignedArray(byte[] f){
                 this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(val, 0, 0));
                 this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
             }
-        /*try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } */
     }
 
     /**
      * cmdToSend()
-     * Envoie une commande par le serial port
+     * Send a command
      * @param cmd
      */
     public void cmdToSend(String cmd){
@@ -335,9 +286,8 @@ public int[] signedToUnsignedArray(byte[] f){
 
     /**
      * getMean()
-     * Renvoie la moyenne d'un tableau
      * @param data
-     * @return
+     * @return mean of a double table
      */
     public int getMean (int[][] data){
         int mean;
@@ -351,6 +301,11 @@ public int[] signedToUnsignedArray(byte[] f){
         return mean;
     }
 
+    /**
+     * getMean()
+     * @param data
+     * @return mean of a table
+     */
     public int getMean (int[] data){
         int mean;
         int sum = 0;
@@ -378,7 +333,6 @@ public int[] signedToUnsignedArray(byte[] f){
 
     /**
      * getSDV()
-     * Renvoie l'écart type
      * @param data
      * @param m
      * @return
@@ -415,7 +369,7 @@ public int[] signedToUnsignedArray(byte[] f){
         return SDV;
     }
 
- //Acceseurs
+    //Acceseurs
     /**
      * Method     : getSerialPort()
      * Returns    : data from the serial port
