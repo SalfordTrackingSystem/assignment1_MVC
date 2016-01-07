@@ -5,13 +5,10 @@
  * Time: 11:59
  * To change this template use File | Settings | File Templates.
  */
-//package com.journaldev.concurrency;
 
 import java.util.concurrent.BlockingQueue;
 
-
 public class Producer implements Runnable {
-
     private BlockingQueue<int[]> queue;
     private Controller _ctrl;
     private Boolean stateFrame;
@@ -28,30 +25,24 @@ public class Producer implements Runnable {
         interCmdFalse = 1;
         track = 0;
     }
+
+    /**
+     * Run in background to send command and get data.
+     * We have to convert data byte because java don't handle unsigned bytes
+     */
     @Override
     public synchronized void run() {
         byte[] frameSigned;
         int[] frameUnsigned;
         try {
             while(stateFrame){
-                /*** Real test ready***/
-                //_ctrl.getGUI().getTextPane().setText(Integer.toString(track));
                 _ctrl.getModel().sendCmd(interCmd, track);
-                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.SC);
-                //_ctrl.getSerialPort().txByte((byte)protocol.SENSOR_THERMAL.ID);
                 try{
                     Thread.sleep(100);
                 }catch(Exception e){
                     System.out.println("error");
                 }
                 frameSigned = _ctrl.getSerialPort().rxData();
-                //for(int i = 0;i<frameSigned.length;i++)
-                //System.out.print(frameSigned[i]);
-                /****/
-                /*** simulation test ***/
-                //frameSigned = _ctrl.getModel().getSensors_simulation(interCmd);
-                /****/
-
                 frameUnsigned = _ctrl.getModel().signedToUnsignedArray(frameSigned);
                 if (handleFrame(frameUnsigned)){
                     frameUnsigned = takeGoodFrame(frameUnsigned);
@@ -66,14 +57,18 @@ public class Producer implements Runnable {
                         break;
                     }
                 }
-                /*** Real test ***/
                  _ctrl.getSerialPort().resetRxData();
-                /****/
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Check the frame and valid or not
+     * @param f  : frame
+     * @return ack, nack, frameValidOrNot
+     */
     public Boolean handleFrame(int[] f){  // return ack, nack, frameValidOrNot
         Boolean flag_ack = false;
         Boolean flag_nack = false;
@@ -107,12 +102,17 @@ public class Producer implements Runnable {
         }
         return flag_return;
     }
+
+    /**
+     * Take only the needed data in the frame, without ack or nack.
+     * @param f : frame
+     * @return
+     */
     public int[] takeGoodFrame(int[] f){
         int[] goodFrame = new int[21];
         for(int i=0 ; i<f.length ; i++){
             if(f[i] == frame.SENSOR_LIR.SB){
                 for(int j=i; j<i+21 ; j++){
-                    //System.out.print(j+" ");
                     goodFrame[j-i] = f[j];
                 }
                 break;
@@ -120,6 +120,8 @@ public class Producer implements Runnable {
         }
         return goodFrame;
     }
+
+    // Accesors & Mutators
     public Boolean getStateFrame(){
         return this.stateFrame;
     }

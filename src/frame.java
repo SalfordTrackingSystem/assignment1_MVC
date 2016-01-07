@@ -1,5 +1,6 @@
 /*
-* Sensor enumeration to analyse frame
+* Sensor enumeration to analyse frame.
+* Help us to handle the communication protocol.
 */
 public enum frame {
     // 36 => $     37 => %      ID => in byte 1 = 49

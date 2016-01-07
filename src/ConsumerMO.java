@@ -4,8 +4,8 @@
  * Date: 11/10/15
  * Time: 12:02
  * To change this template use File | Settings | File Templates.
+ * Take data in the specify motor queue
  */
-//package com.journaldev.concurrency;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -20,6 +20,10 @@ public class ConsumerMO implements Runnable{
         this.stateFrame = true;
         this.queue = q;
     }
+
+    /**
+     * Consume the queue if the frame is valid.
+     */
     @Override
     public synchronized void run() {
         try{
@@ -37,9 +41,6 @@ public class ConsumerMO implements Runnable{
         for (int i=0; i<21 ; i++)
             System.out.print(frame[i] + " ");
         System.out.println();
-        ////////////////
-        /*float val = frame[2];
-        val = (180f/(2080f-1000f))*(val - 1000f);*/
         _ctrl.getModel().applyOnGUI("MOT", frame[2], frame);
     }
 }

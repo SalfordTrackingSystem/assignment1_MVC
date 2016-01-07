@@ -6,11 +6,10 @@ import com.sun.org.apache.xpath.internal.SourceTree;
  * Date: 13/10/15
  * Time: 11:49
  * To change this template use File | Settings | File Templates.
+ * Sensors fusion combine infrared and thermal sensors.
  */
 public class Tracking {
-
-    //Attributes
-    //kalman parameter
+    // Kalman parameters
     private double q; //process noise covariance
     private double r; //measurement noise covariance
     private double x; //value
@@ -22,7 +21,6 @@ public class Tracking {
     private IRTrack _irTrack;
     private ThermalTrack _thermalTrack;
 
-    //Constructor
     public Tracking(Controller controller) {
         this._ctrl = controller;
         _motorTrack = new MotorTrack(_ctrl);
@@ -30,17 +28,12 @@ public class Tracking {
         _thermalTrack = new ThermalTrack(_ctrl);
     }
 
-
     /**
      * fusion
-     * Decide de la commande moteur en fonction de la fiabilité des capteur
+     * Send cmd
      * @param side
      */
-
     public String senorFusion(String flag, String side){
-
-
-
         return side;
     }
 
@@ -67,7 +60,6 @@ public class Tracking {
     public void kalman_update(double measurement)
     {
         //prediction update
-        //omit x = x
         p += q;
 
         //measurement update
@@ -76,7 +68,7 @@ public class Tracking {
         p = (1 - k) * p;
     }
 
-    //Accusers & Mutters
+    //Accessors & Mutators
     public MotorTrack get_motorTrack(){
         return _motorTrack;
     }

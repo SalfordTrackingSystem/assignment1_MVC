@@ -6,11 +6,10 @@
  * Date: 13/10/15
  * Time: 11:56
  * To change this template use File | Settings | File Templates.
+ * Method related to the tracking with thermal camera
  */
 
 public class ThermalTrack {
-
-    //Attributes
     private Controller _ctrl;
     private int[][] matrix;
     private int result;
@@ -51,8 +50,6 @@ public class ThermalTrack {
 
         mean = getMean(matrix);
         standardDev = getStandardDev(matrix);
-        //System.out.println(moyenne +" : mean");
-        //System.out.println(ecartType +" : standard deviation");
         toleranceMin = mean - standardDev;
         toleranceMax =  mean + standardDev;
 
@@ -79,7 +76,6 @@ public class ThermalTrack {
      * Method     : info_tracking
      * Parameters : the frame given by the thermal camera
      * Returns    : An indication of the rotation order
-     * Notes      :
      **/
     public String info_tracking(int[] frame)
     {
@@ -96,18 +92,14 @@ public class ThermalTrack {
                 else
                     val = 255 - frame[17-i*4-j];
                 matrix[i][j] = val;
-                //System.out.print(val+" ");
             }
-            //System.out.println();
         }
 
         result = isSomeoneThere();               //!< is someone in front of the camera ?
-        //System.out.println(result+" :result");
         if(result == 1)
             return "tracked";
         else if(result == 2)                     //!< is the person to the right or the left ?
         {
-            //System.out.println("to the left");
                                                  //!<Filling the matrix left and right with the walue of the left side pixels
                                                  //!< and the right side pixels
             for(int i=0 ; i<matrix_leftSide.length   ; i++)
@@ -116,15 +108,12 @@ public class ThermalTrack {
                 {
                     matrix_leftSide[i][j] = matrix[i][j];
                     matrix_rightSide[i][j] = matrix[i][j+2];
-                    //System.out.print(matrix[i][j]+" ");
                 }
-                //System.out.println();
             }
 
             mean_leftSide = getMean(matrix_leftSide);
             mean_rightSide = getMean(matrix_rightSide);
             diff_meanLeftRight = Math.abs(mean_leftSide - mean_rightSide); //!< Calculation of the difference between the lef and right mean
-            //_ctrl.getGUI().getTextPane().setText(Double.toString(diff));
 
             if(diff_meanLeftRight > sensitivity)
             {

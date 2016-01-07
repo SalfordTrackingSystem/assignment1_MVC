@@ -4,15 +4,12 @@
  * Date: 13/10/15
  * Time: 11:56
  * To change this template use File | Settings | File Templates.
+ * Method related to the tracking with infrared sensors
  */
 public class IRTrack {
-
-    //Attributes
     private int distanceR,distanceL,marge;
-
     private Controller _ctrl;
 
-    //Constructor
     public IRTrack (Controller controller){
         this._ctrl = controller;
     }

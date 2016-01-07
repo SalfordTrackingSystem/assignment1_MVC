@@ -14,6 +14,7 @@ import java.util.concurrent.BlockingQueue;
  * Date: 03/10/15
  * Time: 10:47
  * To change this template use File | Settings | File Templates.
+ * All the method we need...
  */
 
 
@@ -21,11 +22,6 @@ public class Model {
     private Controller _ctrl;
     private SerialPort _sp;
     private Tracking _track;
-    //private BlockingQueue<byte[]> qIR;
-    //private BlockingQueue<byte[]> qTH;
-    //private BlockingQueue<byte[]> qMO;
-
-
     /**
      * Method     : Constructor of Model class
      * Parameters : Controller
@@ -42,6 +38,10 @@ public class Model {
         long timeout = 0;
     }
 
+    /**
+     * Handle requests
+     * @param flag
+     */
     public void cmd(String flag){
         if (flag.equals("LIR")) {
             _ctrl.getSerialPort().txByte((byte) protocol.SENSOR_LIR.SC);
@@ -69,16 +69,20 @@ public class Model {
 
         } else {
             System.out.println("Invalid CMD");
-
         }
     }
 
+    /**
+     * Send requests
+     * @param i
+     * @param t
+     */
     public void sendCmd(int i, int t){
         if(t==0){
-            if (i==1)cmd(frame.SENSOR_THERMAL.NAME);//cmd(frame.SENSOR_LIR.NAME);
-            if (i==2)cmd(frame.SENSOR_THERMAL.NAME);//cmd(frame.SENSOR_RIR.NAME);
+            if (i==1)cmd(frame.SENSOR_THERMAL.NAME);
+            if (i==2)cmd(frame.SENSOR_THERMAL.NAME);
             if (i==3)cmd(frame.SENSOR_THERMAL.NAME);
-            if (i==4)cmd(frame.SENSOR_THERMAL.NAME);//cmd(frame.SENSOR_MOTOR.NAME);
+            if (i==4)cmd(frame.SENSOR_THERMAL.NAME);
         }else if(t==5){
             cmd(protocol.SENSOR_MOTOR_LEFT.NAME);
             System.out.println("cmd left send");
@@ -91,6 +95,12 @@ public class Model {
             System.out.println("cmd pb with sendCmd()");
         }
     }
+
+    /**
+     * Use to simulate commands
+     * @param i
+     * @return
+     */
     public byte[] getSensors_simulation(int i){
         byte[] comand = new byte[21];
         if (i==1){
@@ -108,43 +118,6 @@ public class Model {
         return comand;
     }
 
-        // claim data every 50ms
-        /* Pilou function
-        while (true)
-        {
-            if(timeout >= 50) //50ms
-            {
-                _ctrl.getSerialPort().requestData((byte)1);
-                _ctrl.getSerialPort().requestData((byte)2);
-                _ctrl.getSerialPort().requestData((byte)3);
-                _ctrl.getSerialPort().requestData((byte)4);
-                timeout = 0;
-                time = System.currentTimeMillis();
-            }else{
-                actualTime = System.currentTimeMillis();
-                timeout = actualTime - time;
-            }
-        }
-        */
-        //byte data[] = _sp.;
-        //while(true){
-            // View frame
-            /*
-            for (int i =0;i<21;i++){
-            //String str = new String(_sp.rxData(), "UTF_8");
-
-            //_ctrl.getGUI().setValue_textPanel(str, "DATA : ");
-                System.out.print(_sp.rxData()[i]+" ");
-            }
-            System.out.println();
-            //System.out.println();
-            */
-            // Set image data to the GUI
-            /*
-            _ctrl.getGUI().setImage(_sp.rxData());
-            */
-        //}
-    //}
     /**
      * Method     : simulation()
      * Parameters : Waiting time in milliseconds
@@ -162,6 +135,7 @@ public class Model {
         System.out.println(n);
         return n;
     }
+
     /**
      * Method     : simulation_frame()
      * Returns    : 8 or 16 bits frame with |SB|ID|CRC|CN|EB|
@@ -169,19 +143,15 @@ public class Model {
      **/
     public byte[] simulation_frame_RIR(){
         Random rd = new Random();
-        //byte i = 1;
         byte i =(byte)(rd.nextInt(254)+1);
         byte j =(byte)(rd.nextInt(4));
         byte[] frameSigned = {(byte)'#',(byte)'A',36, 1, j, i, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 37};
-        //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
-        //byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits
 
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        //System.out.println(frame[0]);
         return frameSigned;
     }
     public byte[] simulation_frame_LIR(){
@@ -189,15 +159,12 @@ public class Model {
         byte i =(byte)(rd.nextInt(254)+1);
         byte j =(byte)(rd.nextInt(4));
         byte[] frameSigned = {(byte)'#',(byte)'A',36, 2, j, i, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 37};
-        //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
-        //byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits
 
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        //System.out.println(frame[0]);
         return frameSigned;
     }
     public byte[] simulation_frame_THE(){
@@ -205,36 +172,23 @@ public class Model {
         byte i = (byte) (rd.nextInt(100)+1);
         byte[] frameSigned = {(byte)'#',(byte)'A',36, 3, (byte) 255, i, i, i, i, (byte) 255, (byte) 255, i, i, (byte) 255, (byte) 255, i, i, i, i, i, 124, 0, 37};
 
-        //byte[] frameSigned = {(byte)'#',(byte)'A',36, 3, (byte)255, 0, 0, 0, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, (byte)125, 100, 124, 0, 37};
-        //int[] frame = new int[frameSigned.length];
-
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        //System.out.println(frame[0]);
-        /*
-        for(int j=0;j<frameSigned.length;j++){
-            frame[j] = (frameSigned[j] & 0xFF);
-        } */
         return (frameSigned);
     }
     public byte[] simulation_frame_MOT(){
         Random rd = new Random();
-        //byte i = 1;
         byte i =(byte)(rd.nextInt(170)+1);
-        //if(i<1100) i = (byte) 1100;
         byte[] frameSigned = {(byte)'#',(byte)'A',36, 4, i, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 37};
-        //byte[] frame = {36, 2, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, -57, 0, 37};      // 16 bits
-        //byte[] frame = {36, 2, i, i, 0, 0, 0, 0, 0, 0, 34, 0, 37};                                 // 8 bits
 
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        //System.out.println(frame[0]);
         return frameSigned;
     }
     /**
@@ -242,6 +196,7 @@ public class Model {
      * Parameters : byte[] data (frame),  byte crcReceive
      * Returns    : Boolean => to validated the frame or not
      * Notes      : Analyse the CRC and compare it to the CRC calculate by the µC
+     * Warning    : We haven't the time to debug the crc, so we always returning True
      **/
     private boolean checkCRC(int[] data, int crcReceive){
         //CRC
@@ -263,11 +218,9 @@ public class Model {
             }
         }
         if (crc != crcReceive){
-            //System.out.println(crc);
             return true;  // put false for the real application
         }
         else{
-            //System.out.println(crc);
             return true;
         }
     }
@@ -297,7 +250,6 @@ public class Model {
                     System.out.println("Frame validated => |SB|ID|CRC|CN|EB|");
                     System.out.println(flag + " => | "+data[0]+" | "+data[1]+" | "+data[data.length-3]+" | "+data[data.length-2]+" | "+data[data.length-1]+" |");
                     switchQueue(flag, data);
-                    //this.applyOnGUI(flag, data);
                 }
                 else                                            System.out.println("EB is not valid");
             }
@@ -305,6 +257,11 @@ public class Model {
         else                                                    System.out.println("SB is not valid");
     }
 
+    /**
+     * Choose the right queue to put the frame in.
+     * @param flag
+     * @param data
+     */
     public void switchQueue(String flag, int[] data){
         if (flag.equals("LIR")) {
             try {
@@ -339,6 +296,7 @@ public class Model {
 
         }
     }
+
     /**
      * Method     : applyOnGUI()
      * Parameters : String flag (name of the sensor), byte[] data (frame)
@@ -351,13 +309,8 @@ public class Model {
         int position = 0;
         if (flag.equals("LIR")) {
             _ctrl.getGUI().setValue_L_IR(dist);
-            //_ctrl.getGUI().getTextPane().setText(Integer.toString(dist));
-            //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> L_IR_setTo : ");
-
         } else if (flag.equals("RIR")) {
             _ctrl.getGUI().setValue_R_IR(dist);
-            //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> R_IR_setTo : ");
-
         } else if (flag.equals("THE")) {
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 4; j++) {
@@ -365,26 +318,17 @@ public class Model {
                         color = 128;
                     else
                         color = 255 - data[17 - i * 4 - j];
-                    //System.out.println(color);
                     this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(color, 0, 0));
                     this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
                 }
 
         } else if (flag.equals("MOT")) {//System.out.println("MOT do nothing");
-            // !! Not really implemented at this time, need more information on the motor returned value
-            //position = data[2];
             _ctrl.getGUI().setValue_motor(dist);
-            //_ctrl.getGUI().getTextPane().setText(Integer.toString(dist));
-            //_ctrl.getGUI().setValue_textPanel(Integer.toString(dist), "> MOTOR_setTo : ");
-
         } else {
             System.out.println("Invalid NAME");
 
         }
     }
-
-
-
 
     public int[] signedToUnsignedArray(byte[] f){
         int[] unsignedArray = new int[f.length];
@@ -393,6 +337,7 @@ public class Model {
         }
         return unsignedArray;
     }
+
     /**
      * Method     : changedColor()
      * Parameters : JPanel[][] tablePanel (image panel), JPanel imagePanel(image), byte[] frame(sensor frame)
@@ -409,26 +354,9 @@ public class Model {
                 this._ctrl.getGUI().get_tablePanel()[i][j].setBackground(new Color(val, 0, 0));
                 this._ctrl.getGUI().get_imagePanel().add(this._ctrl.getGUI().get_tablePanel()[i][j]);
             }
-        /*try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } */
     }
-     /*
-    public void cmdToSend(String cmd){
-        byte cmdMotor = 0;
-        if (cmd == "right"){
-            cmdMotor = 5;
-        }
-        else if (cmd == "left"){
-            cmdMotor =6;
-        }
-        _sp.txByte(cmdMotor);
-    }  */
 
-
- //Acceseurs
+    //Acceseurs
     /**
      * Method     : getSerialPort()
      * Returns    : data from the serial port

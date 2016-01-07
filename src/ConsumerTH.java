@@ -4,10 +4,8 @@
  * Date: 11/10/15
  * Time: 12:02
  * To change this template use File | Settings | File Templates.
+ * Take data in the specify thermal queue
  */
-//package com.journaldev.concurrency;
-
-import sun.org.mozilla.javascript.internal.ast.ReturnStatement;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -28,7 +26,6 @@ public class ConsumerTH implements Runnable{
             while(queue.isEmpty() && stateFrame){
                 int[] frame = queue.take();
                 this.handleFrame(frame);
-                //fromFrameToMatrice(frame);
             }
         } catch(InterruptedException e) {
             e.printStackTrace();
@@ -42,7 +39,6 @@ public class ConsumerTH implements Runnable{
         System.out.println();
         _ctrl.getModel().applyOnGUI(protocol.SENSOR_THERMAL.NAME,0, frame);
         /* Tracking*/
-
         cmdTH = _ctrl.getModel().get_track().get_thermalTrack().info_tracking(frame);
         System.out.println(cmdTH);
 
